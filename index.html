@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KUSHI — 소규모 이자카야</title>
+<meta name="description" content="골목 끝 작은 이자카야 쿠시. 정성스러운 꼬치와 한 잔의 사케가 있는 곳.">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Manrope:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET & VARIABLES ===== */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0F172A;--bg-warm:#141E30;--bg-deep:#0A0F1A;
+  --fg:#F8FAFC;--fg-dim:#94A3B8;--fg-muted:#64748B;
+  --primary:#F5F0E8;--accent:#D4A574;--accent-dim:rgba(212,165,116,.15);
+  --border:rgba(248,250,252,.08);--card:rgba(248,250,252,.04);--card-hover:rgba(248,250,252,.07);
+  --overlay:rgba(15,23,42,.85);
+  --selection-bg:#D4A574;--selection-fg:#0F172A;
+  --font-display:'Libre Baskerville',serif;
+  --font-body:'Manrope','Noto Sans KR',sans-serif;
+  --font-mono:'DM Mono',monospace;
+}
+::selection{background:var(--selection-bg);color:var(--selection-fg)}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-break:keep-all;overflow-wrap:break-word;overflow-x:hidden;line-height:1.7}
+
+/* ===== CURSOR ===== */
+.cur-dot{position:fixed;width:6px;height:6px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transition:opacity .3s}
+.cur-ring{position:fixed;width:36px;height:36px;border:1.5px solid rgba(212,165,116,.35);border-radius:50%;pointer-events:none;z-index:9998;transition:width .25s,height .25s,border-color .25s,background .25s}
+.cur-ring.hover{width:64px;height:64px;border-color:var(--accent);background:rgba(212,165,116,.06)}
+.cur-label{position:fixed;pointer-events:none;z-index:9999;font:500 10px/1 var(--font-mono);color:var(--accent);letter-spacing:1px;text-transform:uppercase;opacity:0;transition:opacity .25s}
+.cur-label.show{opacity:1}
+
+/* ===== HAMBURGER NAV ===== */
+.nav-bar{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 32px;display:flex;align-items:center;justify-content:space-between;transition:background .4s}
+.nav-bar.scrolled{background:rgba(15,23,42,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.nav-logo{font:700 15px/1 var(--font-display);color:var(--primary);letter-spacing:3px;text-decoration:none}
+.nav-logo span{color:var(--accent);font-style:italic}
+.hamburger{width:32px;height:20px;position:relative;cursor:pointer;z-index:102}
+.hamburger span{display:block;width:100%;height:2px;background:var(--primary);position:absolute;transition:all .35s;border-radius:2px}
+.hamburger span:nth-child(1){top:0}
+.hamburger span:nth-child(2){top:9px;width:60%}
+.hamburger span:nth-child(3){top:18px}
+.hamburger.open span:nth-child(1){top:9px;transform:rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0}
+.hamburger.open span:nth-child(3){top:9px;transform:rotate(-45deg)}
+
+/* ===== FULLSCREEN OVERLAY MENU ===== */
+.nav-overlay{position:fixed;inset:0;z-index:101;background:var(--bg-deep);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s}
+.nav-overlay.open{opacity:1;pointer-events:auto}
+.nav-menu{text-align:center;list-style:none}
+.nav-menu li{margin:20px 0}
+.nav-menu a{font:400 32px/1.3 var(--font-display);color:var(--fg-dim);text-decoration:none;letter-spacing:2px;transition:color .3s}
+.nav-menu a:hover{color:var(--accent)}
+.nav-overlay-sub{margin-top:40px;font:300 13px/1 var(--font-body);color:var(--fg-muted);letter-spacing:1px}
+
+/* ===== SCROLL REVEAL ===== */
+.rv{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+.rv.show{opacity:1;transform:none}
+.rv-d1{transition-delay:.1s}.rv-d2{transition-delay:.2s}.rv-d3{transition-delay:.3s}.rv-d4{transition-delay:.4s}
+
+/* ===== HERO — GRADIENT MORPH ===== */
+.hero{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden}
+.hero-morph{position:absolute;inset:0;background:linear-gradient(135deg,var(--bg-deep) 0%,var(--bg-warm) 40%,#1A1520 70%,var(--bg-deep) 100%);background-size:300% 300%;animation:morphBg 12s ease infinite}
+@keyframes morphBg{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.hero-grain{position:absolute;inset:0;opacity:.04;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.hero-content{position:relative;z-index:1;max-width:560px;padding:0 24px}
+.hero-label{font:400 11px/1 var(--font-mono);color:var(--accent);letter-spacing:4px;text-transform:uppercase;margin-bottom:24px}
+.hero-title{font:400 48px/1.15 var(--font-display);color:var(--primary);margin-bottom:16px}
+.hero-title em{font-style:italic;color:var(--accent)}
+.hero-sub{font:300 15px/1.8 var(--font-body);color:var(--fg-dim);margin-bottom:32px}
+.hero-cta{display:inline-flex;align-items:center;gap:10px;font:500 13px/1 var(--font-body);color:var(--bg);background:var(--accent);padding:14px 32px;border-radius:0;text-decoration:none;letter-spacing:1px;transition:background .3s}
+.hero-cta:hover{background:#C4955A}
+.hero-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px}
+.hero-scroll span{font:300 9px/1 var(--font-mono);color:var(--fg-muted);letter-spacing:2px;text-transform:uppercase}
+.hero-scroll-line{width:1px;height:40px;background:linear-gradient(180deg,var(--accent),transparent)}
+
+/* ===== SECTION COMMON ===== */
+.section{padding:100px 0}
+.section-inner{max-width:1080px;margin:0 auto;padding:0 32px}
+.section-label{font:400 11px/1 var(--font-mono);color:var(--accent);letter-spacing:4px;text-transform:uppercase;margin-bottom:12px}
+.section-title{font:400 36px/1.25 var(--font-display);color:var(--primary);margin-bottom:20px}
+.section-desc{font:300 15px/1.8 var(--font-body);color:var(--fg-dim);max-width:560px}
+
+/* ===== ABOUT — IMMERSIVE BAND (WARM) ===== */
+.about{background:var(--bg-warm)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px;align-items:center}
+.about-img{aspect-ratio:4/5;border-radius:2px;overflow:hidden}
+.about-img .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.about-bg{background:linear-gradient(135deg,#2A1F14,#1E1510);width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--fg-muted);font-size:13px}
+.about-text{display:flex;flex-direction:column;gap:20px}
+.about-quote{font:italic 20px/1.6 var(--font-display);color:var(--primary);border-left:2px solid var(--accent);padding-left:20px}
+.about-p{font:300 14px/1.9 var(--font-body);color:var(--fg-dim)}
+
+/* ===== MENU — HOVER REVEAL CARDS ===== */
+.menu{background:var(--bg-deep)}
+.menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:48px}
+.menu-card{position:relative;padding:40px 28px;background:var(--card);border:1px solid var(--border);overflow:hidden;cursor:pointer;transition:background .4s}
+.menu-card:hover{background:var(--card-hover)}
+.menu-card-bg{position:absolute;inset:0;opacity:0;transition:opacity .5s;z-index:0}
+.menu-card:hover .menu-card-bg{opacity:.2}
+.menu-card-content{position:relative;z-index:1}
+.menu-card-num{font:300 11px/1 var(--font-mono);color:var(--fg-muted);margin-bottom:16px}
+.menu-card-name{font:700 18px/1.3 var(--font-display);color:var(--primary);margin-bottom:8px;white-space:nowrap}
+.menu-card-desc{font:300 13px/1.7 var(--font-body);color:var(--fg-muted);margin-bottom:16px}
+.menu-card-price{font:400 14px/1 var(--font-mono);color:var(--accent);white-space:nowrap}
+.menuBg1{background:linear-gradient(135deg,#3D2B1F,#5C3D2E)}
+.menuBg2{background:linear-gradient(135deg,#2E3A2E,#1F2B1F)}
+.menuBg3{background:linear-gradient(135deg,#2B2A3D,#1F1E30)}
+.menuBg4{background:linear-gradient(135deg,#3D3526,#2E2A1F)}
+.menuBg5{background:linear-gradient(135deg,#2A2F3D,#1E2430)}
+.menuBg6{background:linear-gradient(135deg,#3D2B35,#2E1F28)}
+
+/* ===== GALLERY — HOVER REVEAL ===== */
+.gallery{background:var(--bg)}
+.gallery-list{margin-top:48px;display:flex;flex-direction:column}
+.gallery-item{display:flex;align-items:center;padding:28px 0;border-bottom:1px solid var(--border);position:relative;overflow:hidden;cursor:pointer}
+.gallery-item:first-child{border-top:1px solid var(--border)}
+.gallery-num{font:300 12px/1 var(--font-mono);color:var(--fg-muted);width:48px;white-space:nowrap}
+.gallery-name{font:400 22px/1.3 var(--font-display);color:var(--fg-dim);flex:1;transition:color .3s}
+.gallery-item:hover .gallery-name{color:var(--accent)}
+.gallery-tag{font:300 11px/1 var(--font-mono);color:var(--fg-muted);letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
+.gallery-reveal{position:absolute;right:120px;top:50%;transform:translateY(-50%) scale(.9);width:200px;height:140px;border-radius:2px;opacity:0;transition:opacity .4s,transform .4s;pointer-events:none;z-index:2}
+.gallery-item:hover .gallery-reveal{opacity:1;transform:translateY(-50%) scale(1)}
+.galBg1{background:linear-gradient(135deg,#4A3728,#2D1F14)}
+.galBg2{background:linear-gradient(135deg,#28364A,#141F2D)}
+.galBg3{background:linear-gradient(135deg,#4A2836,#2D141F)}
+.galBg4{background:linear-gradient(135deg,#364A28,#1F2D14)}
+
+/* ===== DRINKS ===== */
+.drinks{background:var(--bg)}
+.drinks-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px}
+.drinks-col{}
+.drinks-cat{font:700 13px/1 var(--font-display);color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.drinks-item{display:flex;align-items:baseline;gap:8px;padding:10px 0}
+.drinks-name{font:400 15px/1.4 var(--font-body);color:var(--fg-dim);white-space:nowrap}
+.drinks-line{flex:1;border-bottom:1px dotted var(--border);margin:0 4px;min-width:20px}
+.drinks-price{font:400 13px/1 var(--font-mono);color:var(--accent);white-space:nowrap}
+@media(max-width:768px){
+  .drinks-grid{grid-template-columns:1fr;gap:36px}
+}
+
+/* ===== INFO — IMMERSIVE BAND (WARM) ===== */
+.info{background:var(--bg-warm)}
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:48px}
+.info-block{}
+.info-label{font:400 10px/1 var(--font-mono);color:var(--accent);letter-spacing:3px;text-transform:uppercase;margin-bottom:12px}
+.info-text{font:300 14px/1.9 var(--font-body);color:var(--fg-dim)}
+.info-text a{color:var(--accent);text-decoration:none}
+.info-text a:hover{text-decoration:underline}
+
+/* ===== FOOTER ===== */
+.footer{background:var(--bg-deep);padding:48px 0;text-align:center}
+.footer-brand{font:700 14px/1 var(--font-display);color:var(--primary);letter-spacing:3px;margin-bottom:12px}
+.footer-copy{font:300 11px/1.6 var(--font-body);color:var(--fg-muted)}
+
+/* ===== FLOATING BUTTONS ===== */
+.float-wrap{position:fixed;bottom:24px;right:24px;display:flex;flex-direction:column;gap:10px;z-index:90}
+.float-btn{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;transition:transform .3s,opacity .3s;opacity:.7}
+.float-btn:hover{transform:scale(1.1);opacity:1}
+.float-top{background:var(--card);border:1px solid var(--border);color:var(--primary);font-size:18px}
+.float-kakao{background:#FEE500;color:#3C1E1E}
+
+/* ===== LIGHTBOX ===== */
+.lb{position:fixed;inset:0;z-index:200;background:rgba(10,15,26,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center}
+.lb.open{display:flex}
+.lb-img{max-width:90vw;max-height:85vh;border-radius:2px}
+.lb-close{position:absolute;top:20px;right:24px;font:300 28px/1 var(--font-body);color:var(--fg-dim);cursor:pointer;background:none;border:none}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);font:300 32px/1 var(--font-body);color:var(--fg-dim);cursor:pointer;background:none;border:none;padding:16px}
+.lb-prev{left:16px}
+.lb-next{right:16px}
+
+/* ===== RESPONSIVE — TABLET ===== */
+@media(max-width:1024px)and(min-width:769px){
+  .hero-title{font-size:40px}
+  .about-grid{gap:32px}
+  .menu-grid{grid-template-columns:repeat(2,1fr)}
+  .info-grid{grid-template-columns:repeat(2,1fr)}
+}
+/* ===== RESPONSIVE — MOBILE ===== */
+@media(max-width:768px){
+  br{display:none}
+  .hero-title{font-size:32px}
+  .hero-sub{font-size:14px}
+  .about-grid{grid-template-columns:1fr;gap:32px}
+  .about-img{aspect-ratio:16/10}
+  .menu-grid{grid-template-columns:1fr}
+  .gallery-reveal{display:none}
+  .gallery-name{font-size:18px}
+  .info-grid{grid-template-columns:1fr;gap:24px}
+  .section{padding:72px 0}
+  .section-title{font-size:28px}
+  .nav-menu a{font-size:24px}
+  .float-wrap{bottom:16px;right:16px}
+}
+</style>
+</head>
+<body id="top">
+
+<!-- ===== CURSOR ===== -->
+<div class="cur-dot"></div>
+<div class="cur-ring"></div>
+<div class="cur-label"></div>
+
+<!-- ===== NAV ===== -->
+<nav class="nav-bar">
+  <a href="#top" class="nav-logo">KUSHI<span>.</span></a>
+  <div class="hamburger" data-cursor="Menu">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="nav-overlay">
+  <ul class="nav-menu">
+    <li><a href="#about">About</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#info">Info</a></li>
+  </ul>
+  <div class="nav-overlay-sub">골목 끝 작은 이자카야</div>
+</div>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-morph"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-content">
+    <div class="hero-label rv">Est. 2024</div>
+    <h1 class="hero-title rv rv-d1">골목 끝,<br><em>한 잔</em>의 여유</h1>
+    <p class="hero-sub rv rv-d2">정성스러운 꼬치와 엄선된 사케.<br>작지만 깊은 맛이 있는 이자카야, 쿠시.</p>
+    <a href="https://pf.kakao.com/_zAqqX" class="hero-cta rv rv-d3" target="_blank" rel="noopener noreferrer" data-cursor="Reserve">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 3C6.5 3 2 6.58 2 11c0 2.83 1.88 5.29 4.68 6.68L5.5 21l4.2-2.1c.75.14 1.52.1 2.3.1 5.5 0 10-3.58 10-8s-4.5-8-10-8z"/></svg>
+      예약 문의
+    </a>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section class="about section" id="about">
+  <div class="section-inner">
+    <div class="section-label rv">About</div>
+    <h2 class="section-title rv rv-d1">카운터 너머의<br>작은 세계</h2>
+    <div class="about-grid">
+      <div class="about-img rv rv-d2">
+        <div class="ph"><div class="about-bg aboutBg1"></div></div>
+      </div>
+      <div class="about-text">
+        <blockquote class="about-quote rv rv-d2">"좋은 꼬치 하나에 좋은 술 한 잔이면,<br>그날은 좋은 날입니다."</blockquote>
+        <p class="about-p rv rv-d3">쿠시는 8석 남짓한 작은 이자카야입니다. 매일 아침 시장에서 고른 신선한 재료로, 주인장이 직접 꼬치를 굽고 술을 따릅니다.</p>
+        <p class="about-p rv rv-d4">화려하지 않지만, 한 꼬치 한 꼬치에 정성을 담습니다. 골목 끝 조용한 자리에서 오늘 하루를 마무리하세요.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MENU ===== -->
+<section class="menu section" id="menu">
+  <div class="section-inner">
+    <div class="section-label rv">Menu</div>
+    <h2 class="section-title rv rv-d1">오늘의 꼬치</h2>
+    <p class="section-desc rv rv-d2">매일 달라지는 재료, 변하지 않는 정성.</p>
+    <div class="menu-grid">
+      <div class="menu-card rv" data-cursor="View">
+        <div class="menu-card-bg menuBg1"></div>
+        <div class="menu-card-content">
+          <div class="menu-card-num">01</div>
+          <div class="menu-card-name">모모 (닭다리살)</div>
+          <div class="menu-card-desc">소금구이 또는 타레.<br>육즙 가득한 닭다리살.</div>
+          <div class="menu-card-price">4,500</div>
+        </div>
+      </div>
+      <div class="menu-card rv rv-d1" data-cursor="View">
+        <div class="menu-card-bg menuBg2"></div>
+        <div class="menu-card-content">
+          <div class="menu-card-num">02</div>
+          <div class="menu-card-name">츠쿠네 (닭완자)</div>
+          <div class="menu-card-desc">달걀노른자에 찍어 먹는<br>수제 닭완자 꼬치.</div>
+          <div class="menu-card-price">5,000</div>
+        </div>
+      </div>
+      <div class="menu-card rv rv-d2" data-cursor="View">
+        <div class="menu-card-bg menuBg3"></div>
+        <div class="menu-card-content">
+          <div class="menu-card-num">03</div>
+          <div class="menu-card-name">네기마 (파닭)</div>
+          <div class="menu-card-desc">대파와 닭가슴살의<br>간결한 조합.</div>
+          <div class="menu-card-price">4,500</div>
+        </div>
+      </div>
+      <div class="menu-card rv rv-d3" data-cursor="View">
+        <div class="menu-card-bg menuBg4"></div>
+        <div class="menu-card-content">
+          <div class="menu-card-num">04</div>
+          <div class="menu-card-name">하츠 (심장)</div>
+          <div class="menu-card-desc">소금구이. 탱글한 식감,<br>고소한 풍미.</div>
+          <div class="menu-card-price">4,000</div>
+        </div>
+      </div>
+      <div class="menu-card rv rv-d4" data-cursor="View">
+        <div class="menu-card-bg menuBg5"></div>
+        <div class="menu-card-content">
+          <div class="menu-card-num">05</div>
+          <div class="menu-card-name">시이타케 (표고버섯)</div>
+          <div class="menu-card-desc">통째로 구워 육즙이<br>터지는 표고.</div>
+          <div class="menu-card-price">4,000</div>
+        </div>
+      </div>
+      <div class="menu-card rv" data-cursor="View">
+        <div class="menu-card-bg menuBg6"></div>
+        <div class="menu-card-content">
+          <div class="menu-card-num">06</div>
+          <div class="menu-card-name">오마카세 5종</div>
+          <div class="menu-card-desc">주인장이 고른 오늘의<br>베스트 5종 세트.</div>
+          <div class="menu-card-price">22,000</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DRINKS ===== -->
+<section class="drinks section">
+  <div class="section-inner">
+    <div class="section-label rv">Drinks</div>
+    <h2 class="section-title rv rv-d1">오늘 밤의 한 잔</h2>
+    <p class="section-desc rv rv-d2">꼬치에 어울리는 사케와 하이볼을 엄선했습니다.</p>
+    <div class="drinks-grid">
+      <div class="drinks-col rv rv-d1">
+        <div class="drinks-cat">Sake</div>
+        <div class="drinks-item">
+          <span class="drinks-name">준마이 다이긴조</span>
+          <span class="drinks-line"></span>
+          <span class="drinks-price">12,000</span>
+        </div>
+        <div class="drinks-item">
+          <span class="drinks-name">하나비 니고리</span>
+          <span class="drinks-line"></span>
+          <span class="drinks-price">10,000</span>
+        </div>
+        <div class="drinks-item">
+          <span class="drinks-name">쿠로 준마이</span>
+          <span class="drinks-line"></span>
+          <span class="drinks-price">9,000</span>
+        </div>
+        <div class="drinks-item">
+          <span class="drinks-name">유즈 사케</span>
+          <span class="drinks-line"></span>
+          <span class="drinks-price">8,000</span>
+        </div>
+      </div>
+      <div class="drinks-col rv rv-d2">
+        <div class="drinks-cat">Highball & Beer</div>
+        <div class="drinks-item">
+          <span class="drinks-name">레몬 하이볼</span>
+          <span class="drinks-line"></span>
+          <span class="drinks-price">7,000</span>
+        </div>
+        <div class="drinks-item">
+          <span class="drinks-name">자몽 하이볼</span>
+          <span class="drinks-line"></span>
+          <span class="drinks-price">7,000</span>
+        </div>
+        <div class="drinks-item">
+          <span class="drinks-name">우메 하이볼</span>
+          <span class="drinks-line"></span>
+          <span class="drinks-price">7,500</span>
+        </div>
+        <div class="drinks-item">
+          <span class="drinks-name">아사히 생맥주</span>
+          <span class="drinks-line"></span>
+          <span class="drinks-price">6,000</span>
+        </div>
+        <div class="drinks-item">
+          <span class="drinks-name">산토리 프리미엄 몰츠</span>
+          <span class="drinks-line"></span>
+          <span class="drinks-price">7,000</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== GALLERY ===== -->
+<section class="gallery section" id="gallery">
+  <div class="section-inner">
+    <div class="section-label rv">Gallery</div>
+    <h2 class="section-title rv rv-d1">공간의 기록</h2>
+    <div class="gallery-list">
+      <div class="gallery-item rv" data-cursor="View" data-lb="galBg1">
+        <span class="gallery-num">01</span>
+        <span class="gallery-name">카운터석</span>
+        <span class="gallery-tag">Interior</span>
+        <div class="gallery-reveal galBg1"></div>
+      </div>
+      <div class="gallery-item rv rv-d1" data-cursor="View" data-lb="galBg2">
+        <span class="gallery-num">02</span>
+        <span class="gallery-name">숯불 위의 꼬치</span>
+        <span class="gallery-tag">Kitchen</span>
+        <div class="gallery-reveal galBg2"></div>
+      </div>
+      <div class="gallery-item rv rv-d2" data-cursor="View" data-lb="galBg3">
+        <span class="gallery-num">03</span>
+        <span class="gallery-name">사케 컬렉션</span>
+        <span class="gallery-tag">Drinks</span>
+        <div class="gallery-reveal galBg3"></div>
+      </div>
+      <div class="gallery-item rv rv-d3" data-cursor="View" data-lb="galBg4">
+        <span class="gallery-num">04</span>
+        <span class="gallery-name">골목 입구</span>
+        <span class="gallery-tag">Exterior</span>
+        <div class="gallery-reveal galBg4"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== INFO ===== -->
+<section class="info section" id="info">
+  <div class="section-inner">
+    <div class="section-label rv">Info</div>
+    <h2 class="section-title rv rv-d1">찾아오시는 길</h2>
+    <div class="info-grid">
+      <div class="info-block rv rv-d1">
+        <div class="info-label">Address</div>
+        <div class="info-text">서울 용산구 이태원동 00-00<br>골목 안쪽 지하 1층</div>
+      </div>
+      <div class="info-block rv rv-d2">
+        <div class="info-label">Hours</div>
+        <div class="info-text">화 — 토 18:00 ~ 24:00<br>일·월 휴무<br><span style="color:var(--fg-muted);font-size:12px">재료 소진 시 조기 마감</span></div>
+      </div>
+      <div class="info-block rv rv-d3">
+        <div class="info-label">Contact</div>
+        <div class="info-text">
+          <a href="tel:02-000-0000">02-000-0000</a><br>
+          <a href="https://instagram.com/kushi.official" target="_blank" rel="noopener noreferrer">@kushi.official</a><br>
+          <a href="https://pf.kakao.com/_zAqqX" target="_blank" rel="noopener noreferrer">카카오톡 문의</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="footer-brand">KUSHI.</div>
+  <div class="footer-copy">&copy; 2024 KUSHI. All rights reserved.</div>
+</footer>
+
+<!-- ===== FLOATING BUTTONS ===== -->
+<div class="float-wrap">
+  <a href="#top" class="float-btn float-top" data-cursor="Top">&uarr;</a>
+  <a href="https://pf.kakao.com/_zAqqX" class="float-btn float-kakao" target="_blank" rel="noopener noreferrer" data-cursor="Chat">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="#3C1E1E"><path d="M12 3C6.5 3 2 6.58 2 11c0 2.83 1.88 5.29 4.68 6.68L5.5 21l4.2-2.1c.75.14 1.52.1 2.3.1 5.5 0 10-3.58 10-8s-4.5-8-10-8z"/></svg>
+  </a>
+</div>
+
+<!-- ===== LIGHTBOX ===== -->
+<div class="lb" id="lb">
+  <button class="lb-close" id="lbClose">&times;</button>
+  <button class="lb-nav lb-prev" id="lbPrev">&lsaquo;</button>
+  <div class="lb-img" id="lbImg"></div>
+  <button class="lb-nav lb-next" id="lbNext">&rsaquo;</button>
+</div>
+
+<script>
+/* ===== CURSOR ===== */
+(function(){
+  if('ontouchstart' in window){document.querySelector('.cur-dot').style.display='none';document.querySelector('.cur-ring').style.display='none';return}
+  var dot=document.querySelector('.cur-dot'),ring=document.querySelector('.cur-ring'),label=document.querySelector('.cur-label');
+  var mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;dot.style.left=mx-3+'px';dot.style.top=my-3+'px';label.style.left=mx+20+'px';label.style.top=my-8+'px'});
+  (function loop(){rx+=(mx-rx)*.15;ry+=(my-ry)*.15;ring.style.left=rx-18+'px';ring.style.top=ry-18+'px';requestAnimationFrame(loop)})();
+  document.querySelectorAll('[data-cursor]').forEach(function(el){
+    el.addEventListener('mouseenter',function(){ring.classList.add('hover');label.textContent=el.getAttribute('data-cursor');label.classList.add('show')});
+    el.addEventListener('mouseleave',function(){ring.classList.remove('hover');label.classList.remove('show')});
+  });
+})();
+
+/* ===== SCROLL REVEAL ===== */
+(function(){
+  var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('show');obs.unobserve(e.target)}})},{threshold:0.15,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.rv').forEach(function(el){obs.observe(el)});
+})();
+
+/* ===== NAV ===== */
+(function(){
+  var bar=document.querySelector('.nav-bar'),ham=document.querySelector('.hamburger'),ov=document.querySelector('.nav-overlay');
+  window.addEventListener('scroll',function(){bar.classList.toggle('scrolled',window.scrollY>60)});
+  ham.addEventListener('click',function(){ham.classList.toggle('open');ov.classList.toggle('open');document.body.style.overflow=ov.classList.contains('open')?'hidden':''});
+  document.querySelectorAll('.nav-menu a').forEach(function(a){a.addEventListener('click',function(){ham.classList.remove('open');ov.classList.remove('open');document.body.style.overflow=''})});
+})();
+
+/* ===== LIGHTBOX ===== */
+(function(){
+  var bgMap={
+    'galBg1':'linear-gradient(135deg,#4A3728,#2D1F14)',
+    'galBg2':'linear-gradient(135deg,#28364A,#141F2D)',
+    'galBg3':'linear-gradient(135deg,#4A2836,#2D141F)',
+    'galBg4':'linear-gradient(135deg,#364A28,#1F2D14)',
+    'menuBg1':'linear-gradient(135deg,#3D2B1F,#5C3D2E)',
+    'menuBg2':'linear-gradient(135deg,#2E3A2E,#1F2B1F)',
+    'menuBg3':'linear-gradient(135deg,#2B2A3D,#1F1E30)',
+    'menuBg4':'linear-gradient(135deg,#3D3526,#2E2A1F)',
+    'menuBg5':'linear-gradient(135deg,#2A2F3D,#1E2430)',
+    'menuBg6':'linear-gradient(135deg,#3D2B35,#2E1F28)',
+    'aboutBg1':'linear-gradient(135deg,#2A1F14,#1E1510)'
+  };
+  var phSVG='<svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="rgba(245,240,232,.15)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>';
+  var lb=document.getElementById('lb'),lbImg=document.getElementById('lbImg'),keys=Object.keys(bgMap),idx=0;
+  function openLb(cls){idx=keys.indexOf(cls);if(idx<0)idx=0;renderLb()}
+  function renderLb(){lbImg.style.background=bgMap[keys[idx]];lbImg.style.width='70vw';lbImg.style.height='50vh';lbImg.innerHTML='';lb.classList.add('open');document.body.style.overflow='hidden'}
+  function closeLb(){lb.classList.remove('open');document.body.style.overflow=''}
+  document.getElementById('lbClose').addEventListener('click',closeLb);
+  document.getElementById('lbPrev').addEventListener('click',function(){idx=(idx-1+keys.length)%keys.length;renderLb()});
+  document.getElementById('lbNext').addEventListener('click',function(){idx=(idx+1)%keys.length;renderLb()});
+  lb.addEventListener('click',function(e){if(e.target===lb)closeLb()});
+  document.addEventListener('keydown',function(e){if(!lb.classList.contains('open'))return;if(e.key==='Escape')closeLb();if(e.key==='ArrowLeft'){idx=(idx-1+keys.length)%keys.length;renderLb()}if(e.key==='ArrowRight'){idx=(idx+1)%keys.length;renderLb()}});
+  document.querySelectorAll('[data-lb]').forEach(function(el){el.addEventListener('click',function(){openLb(el.getAttribute('data-lb'))})});
+  document.querySelectorAll('.menu-card').forEach(function(el){
+    var bg=el.querySelector('.menu-card-bg');if(!bg)return;
+    var cls=Array.from(bg.classList).find(function(c){return c.startsWith('menu')});
+    if(cls)el.addEventListener('click',function(){openLb(cls)});
+  });
+})();
+
+/* ===== IMAGE PROTECTION ===== */
+document.addEventListener('contextmenu',function(e){if(e.target.closest('.ph,.gallery-reveal,.menu-card-bg,.lb'))e.preventDefault()});
+document.addEventListener('dragstart',function(e){if(e.target.closest('.ph,.gallery-reveal,.menu-card-bg,.lb'))e.preventDefault()});
+
+/* ===== PORTFOLIO PREVIEW AUTO-SCROLL ===== */
+(function(){
+  if(window===window.top)return;
+  var speed=50,paused=false,y=0;
+  function tick(){if(!paused){y+=speed/60;window.scrollTo(0,y);if(y>=document.body.scrollHeight-window.innerHeight){setTimeout(function(){y=0;window.scrollTo(0,0)},2000)}}requestAnimationFrame(tick)}
+  requestAnimationFrame(tick);
+  ['mousedown','touchstart','wheel'].forEach(function(evt){document.addEventListener(evt,function(){paused=true;clearTimeout(window._apTimer);window._apTimer=setTimeout(function(){paused=false},4000)})});
+})();
+
+/* ===== COLOR SHIFT ON SCROLL ===== */
+(function(){
+  var sections=document.querySelectorAll('.section');
+  var colors=['#0F172A','#141E30','#0A0F1A','#0F172A','#141E30'];
+  window.addEventListener('scroll',function(){
+    var t=window.scrollY,h=document.body.scrollHeight-window.innerHeight;
+    if(h<=0)return;
+    var p=t/h;
+    var i=Math.min(Math.floor(p*(colors.length-1)),colors.length-2);
+    var f=p*(colors.length-1)-i;
+    document.body.style.backgroundColor=colors[i];
+  });
+})();
+</script>
+</body>
+</html>
