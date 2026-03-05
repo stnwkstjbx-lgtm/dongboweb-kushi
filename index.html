@@ -7,6 +7,7 @@
 <meta name="description" content="골목 끝 작은 이자카야 쿠시. 정성스러운 꼬치와 한 잔의 사케가 있는 곳.">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%230F172A'/><text y='.76em' x='50' text-anchor='middle' font-size='52' fill='%23D4A574'>串</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Manrope:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
@@ -74,9 +75,15 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 .nav-overlay{position:fixed;inset:0;z-index:101;background:var(--bg-deep);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s}
 .nav-overlay.open{opacity:1;pointer-events:auto}
 .nav-menu{text-align:center;list-style:none}
-.nav-menu li{margin:20px 0}
-.nav-menu a{font:400 32px/1.3 var(--font-display);color:var(--fg-dim);text-decoration:none;letter-spacing:2px;transition:color .3s}
-.nav-menu a:hover{color:var(--accent)}
+.nav-menu li{margin:20px 0;opacity:0;transform:translateY(16px);transition:opacity .4s ease,transform .4s ease}
+.nav-overlay.open .nav-menu li{opacity:1;transform:none}
+.nav-overlay.open .nav-menu li:nth-child(1){transition-delay:.1s}
+.nav-overlay.open .nav-menu li:nth-child(2){transition-delay:.15s}
+.nav-overlay.open .nav-menu li:nth-child(3){transition-delay:.2s}
+.nav-overlay.open .nav-menu li:nth-child(4){transition-delay:.25s}
+.nav-overlay.open .nav-menu li:nth-child(5){transition-delay:.3s}
+.nav-menu a{font:400 32px/1.3 var(--font-display);color:var(--fg-dim);text-decoration:none;letter-spacing:2px;transition:color .3s,letter-spacing .3s}
+.nav-menu a:hover{color:var(--accent);letter-spacing:6px}
 .nav-overlay-sub{margin-top:40px;font:300 13px/1 var(--font-body);color:var(--fg-muted);letter-spacing:1px}
 
 /* ===== SCROLL REVEAL ===== */
@@ -100,7 +107,10 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 .hero-cta:hover{background:#C4955A}
 .hero-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px}
 .hero-scroll span{font:300 9px/1 var(--font-mono);color:var(--fg-muted);letter-spacing:2px;text-transform:uppercase}
-.hero-scroll-line{width:1px;height:40px;background:linear-gradient(180deg,var(--accent),transparent)}
+.hero-scroll-line{width:1px;height:40px;background:linear-gradient(180deg,var(--accent),transparent);animation:scrollBreath 2s ease-in-out infinite}
+@keyframes scrollBreath{0%,100%{opacity:.4;height:40px}50%{opacity:1;height:52px}}
+.hero-title .char{display:inline-block;opacity:0;transform:translateY(20px);animation:charIn .6s ease forwards}
+@keyframes charIn{to{opacity:1;transform:none}}
 
 /* ===== SECTION COMMON ===== */
 .section{padding:100px 0}
@@ -121,12 +131,13 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 /* ===== MENU — HOVER REVEAL CARDS ===== */
 .menu{background:var(--bg-deep)}
 .menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:48px}
-.menu-card{position:relative;padding:40px 28px;background:var(--card);border:1px solid var(--border);overflow:hidden;cursor:pointer;transition:background .4s}
-.menu-card:hover{background:var(--card-hover)}
+.menu-card{position:relative;padding:40px 28px;background:var(--card);border:1px solid var(--border);overflow:hidden;cursor:pointer;transition:background .4s,border-color .4s}
+.menu-card:hover{background:var(--card-hover);border-color:rgba(212,165,116,.2)}
 .menu-card-bg{position:absolute;inset:0;opacity:0;transition:opacity .5s;z-index:0}
 .menu-card:hover .menu-card-bg{opacity:.2}
 .menu-card-content{position:relative;z-index:1}
-.menu-card-num{font:300 11px/1 var(--font-mono);color:var(--fg-muted);margin-bottom:16px}
+.menu-card-num{font:300 11px/1 var(--font-mono);color:var(--fg-muted);margin-bottom:16px;transition:color .4s}
+.menu-card:hover .menu-card-num{color:var(--accent)}
 .menu-card-name{font:700 18px/1.3 var(--font-display);color:var(--primary);margin-bottom:8px;white-space:nowrap}
 .menu-card-desc{font:300 13px/1.7 var(--font-body);color:var(--fg-muted);margin-bottom:16px}
 .menu-card-price{font:400 14px/1 var(--font-mono);color:var(--accent);white-space:nowrap}
@@ -143,8 +154,10 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 .gallery-item{display:flex;align-items:center;padding:28px 0;border-bottom:1px solid var(--border);position:relative;overflow:hidden;cursor:pointer}
 .gallery-item:first-child{border-top:1px solid var(--border)}
 .gallery-num{font:300 12px/1 var(--font-mono);color:var(--fg-muted);width:48px;white-space:nowrap}
-.gallery-name{font:400 22px/1.3 var(--font-display);color:var(--fg-dim);flex:1;transition:color .3s}
-.gallery-item:hover .gallery-name{color:var(--accent)}
+.gallery-name{font:400 22px/1.3 var(--font-display);color:var(--fg-dim);flex:1;transition:color .3s,transform .3s}
+.gallery-item:hover .gallery-name{color:var(--accent);transform:translateX(8px)}
+.gallery-arrow{font:300 18px/1 var(--font-body);color:var(--accent);opacity:0;transform:translateX(-8px);transition:opacity .3s,transform .3s;margin-left:12px}
+.gallery-item:hover .gallery-arrow{opacity:1;transform:none}
 .gallery-tag{font:300 11px/1 var(--font-mono);color:var(--fg-muted);letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
 .gallery-reveal{position:absolute;right:120px;top:50%;transform:translateY(-50%) scale(.9);width:200px;height:140px;border-radius:2px;opacity:0;transition:opacity .4s,transform .4s;pointer-events:none;z-index:2}
 .gallery-item:hover .gallery-reveal{opacity:1;transform:translateY(-50%) scale(1)}
@@ -158,10 +171,13 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 .drinks-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px}
 .drinks-col{}
 .drinks-cat{font:700 13px/1 var(--font-display);color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid var(--border)}
-.drinks-item{display:flex;align-items:baseline;gap:8px;padding:10px 0}
-.drinks-name{font:400 15px/1.4 var(--font-body);color:var(--fg-dim);white-space:nowrap}
+.drinks-item{display:flex;align-items:baseline;gap:8px;padding:10px 0;transition:padding-left .3s}
+.drinks-item:hover{padding-left:8px}
+.drinks-item:hover .drinks-name{color:var(--primary)}
+.drinks-item:hover .drinks-price{color:var(--primary)}
+.drinks-name{font:400 15px/1.4 var(--font-body);color:var(--fg-dim);white-space:nowrap;transition:color .3s}
 .drinks-line{flex:1;border-bottom:1px dotted var(--border);margin:0 4px;min-width:20px}
-.drinks-price{font:400 13px/1 var(--font-mono);color:var(--accent);white-space:nowrap}
+.drinks-price{font:400 13px/1 var(--font-mono);color:var(--accent);white-space:nowrap;transition:color .3s}
 @media(max-width:768px){
   .drinks-grid{grid-template-columns:1fr;gap:36px}
 }
@@ -176,8 +192,10 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 .info-text a:hover{text-decoration:underline}
 
 /* ===== FOOTER ===== */
-.footer{background:var(--bg-deep);padding:48px 0;text-align:center}
-.footer-brand{font:700 14px/1 var(--font-display);color:var(--primary);letter-spacing:3px;margin-bottom:12px}
+.footer{background:var(--bg-deep);padding:48px 0;text-align:center;position:relative}
+.footer-line{width:40px;height:1px;background:var(--accent);margin:0 auto 24px;opacity:.4}
+.footer-brand{font:700 14px/1 var(--font-display);color:var(--primary);letter-spacing:3px;margin-bottom:8px}
+.footer-kanji{font:italic 11px/1 var(--font-display);color:var(--accent);opacity:.3;letter-spacing:4px;margin-bottom:12px}
 .footer-copy{font:300 11px/1.6 var(--font-body);color:var(--fg-muted)}
 
 /* ===== FLOATING BUTTONS ===== */
@@ -261,7 +279,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
   <div class="smoke-wrap"><div class="smoke"></div><div class="smoke"></div><div class="smoke"></div><div class="smoke"></div></div>
   <div class="hero-content">
     <div class="hero-label rv">Est. 2024</div>
-    <h1 class="hero-title rv rv-d1">골목 끝,<br><em>한 잔</em>의 여유</h1>
+    <h1 class="hero-title" style="opacity:0">골목 끝,<br><em>한 잔</em>의 여유</h1>
     <p class="hero-sub rv rv-d2">정성스러운 꼬치와 엄선된 사케.<br>작지만 깊은 맛이 있는 이자카야, 쿠시.</p>
     <a href="https://pf.kakao.com/_zAqqX" class="hero-cta rv rv-d3" target="_blank" rel="noopener noreferrer" data-cursor="Reserve">
       <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 3C6.5 3 2 6.58 2 11c0 2.83 1.88 5.29 4.68 6.68L5.5 21l4.2-2.1c.75.14 1.52.1 2.3.1 5.5 0 10-3.58 10-8s-4.5-8-10-8z"/></svg>
@@ -429,25 +447,25 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
       <div class="gallery-item rv" data-cursor="View" data-lb="galBg1">
         <span class="gallery-num">01</span>
         <span class="gallery-name">카운터석</span>
-        <span class="gallery-tag">Interior</span>
+        <span class="gallery-arrow">&rarr;</span><span class="gallery-tag">Interior</span>
         <div class="gallery-reveal galBg1"></div>
       </div>
       <div class="gallery-item rv rv-d1" data-cursor="View" data-lb="galBg2">
         <span class="gallery-num">02</span>
         <span class="gallery-name">숯불 위의 꼬치</span>
-        <span class="gallery-tag">Kitchen</span>
+        <span class="gallery-arrow">&rarr;</span><span class="gallery-tag">Kitchen</span>
         <div class="gallery-reveal galBg2"></div>
       </div>
       <div class="gallery-item rv rv-d2" data-cursor="View" data-lb="galBg3">
         <span class="gallery-num">03</span>
         <span class="gallery-name">사케 컬렉션</span>
-        <span class="gallery-tag">Drinks</span>
+        <span class="gallery-arrow">&rarr;</span><span class="gallery-tag">Drinks</span>
         <div class="gallery-reveal galBg3"></div>
       </div>
       <div class="gallery-item rv rv-d3" data-cursor="View" data-lb="galBg4">
         <span class="gallery-num">04</span>
         <span class="gallery-name">골목 입구</span>
-        <span class="gallery-tag">Exterior</span>
+        <span class="gallery-arrow">&rarr;</span><span class="gallery-tag">Exterior</span>
         <div class="gallery-reveal galBg4"></div>
       </div>
     </div>
@@ -482,7 +500,9 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 
 <!-- ===== FOOTER ===== -->
 <footer class="footer">
+  <div class="footer-line"></div>
   <div class="footer-brand">KUSHI.</div>
+  <div class="footer-kanji">串 &middot; 居酒屋</div>
   <div class="footer-copy">&copy; 2024 KUSHI. All rights reserved.</div>
 </footer>
 
@@ -503,6 +523,27 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 </div>
 
 <script>
+/* ===== HERO TITLE STAGGER ===== */
+(function(){
+  var title=document.querySelector('.hero-title');
+  if(!title)return;
+  var html=title.innerHTML;
+  var result='';
+  var idx=0;
+  var inTag=false;
+  for(var i=0;i<html.length;i++){
+    var ch=html[i];
+    if(ch==='<'){inTag=true;result+=ch;continue}
+    if(ch==='>'){inTag=false;result+=ch;continue}
+    if(inTag){result+=ch;continue}
+    if(ch===' '){result+=ch;continue}
+    result+='<span class="char" style="animation-delay:'+(.3+idx*.06)+'s">'+ch+'</span>';
+    idx++;
+  }
+  title.innerHTML=result;
+  title.style.opacity='1';
+})();
+
 /* ===== CURSOR ===== */
 (function(){
   if('ontouchstart' in window){document.querySelector('.cur-dot').style.display='none';document.querySelector('.cur-ring').style.display='none';return}
