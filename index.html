@@ -30,6 +30,9 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 
 /* ===== TATEGAKI (세로쓰기 장식) ===== */
 .tategaki{position:absolute;writing-mode:vertical-rl;font:italic 14px/1 var(--font-display);color:rgba(212,165,116,.08);letter-spacing:6px;white-space:nowrap;pointer-events:none;user-select:none}
+.tategaki-hero-r{top:12%;right:10%}
+.tategaki-hero-l{bottom:15%;left:8%;font-size:11px;letter-spacing:10px}
+.tategaki-about{top:20%;right:3%;font-size:12px}
 
 /* ===== SMOKE EFFECT ===== */
 .smoke-wrap{position:absolute;bottom:20%;left:50%;transform:translateX(-50%);width:160px;height:260px;pointer-events:none;z-index:0}
@@ -107,10 +110,9 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 .section-desc{font:300 15px/1.8 var(--font-body);color:var(--fg-dim);max-width:560px}
 
 /* ===== ABOUT — IMMERSIVE BAND (WARM) ===== */
-.about{background:var(--bg-warm)}
+.about{background:var(--bg-warm);position:relative}
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px;align-items:center}
 .about-img{aspect-ratio:4/5;border-radius:2px;overflow:hidden}
-.about-img .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
 .about-bg{background:url('https://images.unsplash.com/photo-1624578296395-8e823bddce36?w=800&q=80') center/cover no-repeat;width:100%;height:100%}
 .about-text{display:flex;flex-direction:column;gap:20px}
 .about-quote{font:italic 20px/1.6 var(--font-display);color:var(--primary);border-left:2px solid var(--accent);padding-left:20px}
@@ -241,6 +243,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
   <ul class="nav-menu">
     <li><a href="#about">About</a></li>
     <li><a href="#menu">Menu</a></li>
+    <li><a href="#drinks">Drinks</a></li>
     <li><a href="#gallery">Gallery</a></li>
     <li><a href="#info">Info</a></li>
   </ul>
@@ -253,8 +256,8 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
   <div class="hero-overlay"></div>
   <div class="hero-morph"></div>
   <div class="hero-grain"></div>
-  <div class="tategaki" style="top:12%;right:10%">居酒屋</div>
-  <div class="tategaki" style="bottom:15%;left:8%;font-size:11px;letter-spacing:10px">一期一会</div>
+  <div class="tategaki tategaki-hero-r">居酒屋</div>
+  <div class="tategaki tategaki-hero-l">一期一会</div>
   <div class="smoke-wrap"><div class="smoke"></div><div class="smoke"></div><div class="smoke"></div><div class="smoke"></div></div>
   <div class="hero-content">
     <div class="hero-label rv">Est. 2024</div>
@@ -272,8 +275,8 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 </section>
 
 <!-- ===== ABOUT ===== -->
-<section class="about section" id="about" style="position:relative">
-  <div class="tategaki" style="top:20%;right:3%;font-size:12px">真心込めて</div>
+<section class="about section" id="about">
+  <div class="tategaki tategaki-about">真心込めて</div>
   <div class="section-inner">
     <div class="section-label rv">About</div>
     <h2 class="section-title rv rv-d1">카운터 너머의<br>작은 세계</h2>
@@ -356,7 +359,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 </section>
 
 <!-- ===== DRINKS ===== -->
-<section class="drinks section">
+<section class="drinks section" id="drinks">
   <div class="section-inner">
     <div class="section-label rv">Drinks</div>
     <h2 class="section-title rv rv-d1">오늘 밤의 한 잔</h2>
@@ -574,7 +577,6 @@ document.addEventListener('dragstart',function(e){if(e.target.closest('.ph,.gall
 
 /* ===== COLOR SHIFT ON SCROLL ===== */
 (function(){
-  var sections=document.querySelectorAll('.section');
   var colors=['#0F172A','#141E30','#0A0F1A','#0F172A','#141E30'];
   window.addEventListener('scroll',function(){
     var t=window.scrollY,h=document.body.scrollHeight-window.innerHeight;
