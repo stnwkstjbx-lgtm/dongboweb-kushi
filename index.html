@@ -28,6 +28,34 @@
 html{scroll-behavior:smooth}
 body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-break:keep-all;overflow-wrap:break-word;overflow-x:hidden;line-height:1.7}
 
+/* ===== NOREN INTRO ===== */
+.noren{position:fixed;inset:0;z-index:10000;display:flex;pointer-events:none}
+.noren-left,.noren-right{width:50%;height:100%;position:relative;transition:transform 1.2s cubic-bezier(.77,0,.18,1)}
+.noren-left{background:var(--bg-deep);transform-origin:left center}
+.noren-right{background:var(--bg-deep);transform-origin:right center}
+.noren.open .noren-left{transform:translateX(-100%)}
+.noren.open .noren-right{transform:translateX(100%)}
+.noren-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);writing-mode:vertical-rl;font:400 28px/1.6 var(--font-display);color:var(--accent);letter-spacing:8px;white-space:nowrap;opacity:1;transition:opacity .4s}
+.noren.open .noren-text{opacity:0}
+
+/* ===== TATEGAKI (세로쓰기 장식) ===== */
+.tategaki{position:absolute;writing-mode:vertical-rl;font:italic 14px/1 var(--font-display);color:rgba(212,165,116,.08);letter-spacing:6px;white-space:nowrap;pointer-events:none;user-select:none}
+
+/* ===== SMOKE EFFECT ===== */
+.smoke-wrap{position:absolute;bottom:20%;left:50%;transform:translateX(-50%);width:160px;height:260px;pointer-events:none;z-index:0}
+.smoke{position:absolute;bottom:0;width:40px;height:40px;border-radius:50%;background:radial-gradient(circle,rgba(245,240,232,.06),transparent);filter:blur(18px);animation:smokeRise 4s ease-out infinite;opacity:0}
+.smoke:nth-child(2){left:40px;animation-delay:.9s;width:50px;height:50px}
+.smoke:nth-child(3){left:80px;animation-delay:1.8s;width:35px;height:35px}
+.smoke:nth-child(4){left:120px;animation-delay:2.7s;width:45px;height:45px}
+@keyframes smokeRise{0%{opacity:0;transform:translateY(0) scale(.5)}20%{opacity:.6}80%{opacity:.15}100%{opacity:0;transform:translateY(-220px) scale(1.6) translateX(15px)}}
+
+/* ===== LANTERN GLOW ===== */
+.lantern{position:fixed;border-radius:50%;background:radial-gradient(circle,rgba(212,165,116,.05),transparent 70%);pointer-events:none;z-index:0;animation:lanternPulse 4s ease-in-out infinite}
+.lantern-1{top:15%;right:6%;width:120px;height:120px}
+.lantern-2{top:55%;left:4%;width:80px;height:80px;animation-delay:2s}
+@keyframes lanternPulse{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.7;transform:scale(1.12)}}
+@media(max-width:768px){.lantern,.tategaki{display:none}.smoke-wrap{width:100px;height:160px}}
+
 /* ===== CURSOR ===== */
 .cur-dot{position:fixed;width:6px;height:6px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transition:opacity .3s}
 .cur-ring{position:fixed;width:36px;height:36px;border:1.5px solid rgba(212,165,116,.35);border-radius:50%;pointer-events:none;z-index:9998;transition:width .25s,height .25s,border-color .25s,background .25s}
@@ -201,6 +229,16 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 </head>
 <body id="top">
 
+<!-- ===== NOREN INTRO ===== -->
+<div class="noren" id="noren">
+  <div class="noren-left"><div class="noren-text">串</div></div>
+  <div class="noren-right"><div class="noren-text">櫛</div></div>
+</div>
+
+<!-- ===== LANTERN GLOW ===== -->
+<div class="lantern lantern-1"></div>
+<div class="lantern lantern-2"></div>
+
 <!-- ===== CURSOR ===== -->
 <div class="cur-dot"></div>
 <div class="cur-ring"></div>
@@ -227,6 +265,9 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 <section class="hero">
   <div class="hero-morph"></div>
   <div class="hero-grain"></div>
+  <div class="tategaki" style="top:12%;right:10%">居酒屋</div>
+  <div class="tategaki" style="bottom:15%;left:8%;font-size:11px;letter-spacing:10px">一期一会</div>
+  <div class="smoke-wrap"><div class="smoke"></div><div class="smoke"></div><div class="smoke"></div><div class="smoke"></div></div>
   <div class="hero-content">
     <div class="hero-label rv">Est. 2024</div>
     <h1 class="hero-title rv rv-d1">골목 끝,<br><em>한 잔</em>의 여유</h1>
@@ -243,7 +284,8 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 </section>
 
 <!-- ===== ABOUT ===== -->
-<section class="about section" id="about">
+<section class="about section" id="about" style="position:relative">
+  <div class="tategaki" style="top:20%;right:3%;font-size:12px">真心込めて</div>
   <div class="section-inner">
     <div class="section-label rv">About</div>
     <h2 class="section-title rv rv-d1">카운터 너머의<br>작은 세계</h2>
@@ -470,6 +512,15 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 </div>
 
 <script>
+/* ===== NOREN INTRO ===== */
+(function(){
+  var n=document.getElementById('noren');
+  if(!n)return;
+  document.body.style.overflow='hidden';
+  setTimeout(function(){n.classList.add('open');document.body.style.overflow=''},1200);
+  setTimeout(function(){n.style.display='none'},2500);
+})();
+
 /* ===== CURSOR ===== */
 (function(){
   if('ontouchstart' in window){document.querySelector('.cur-dot').style.display='none';document.querySelector('.cur-ring').style.display='none';return}
