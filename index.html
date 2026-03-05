@@ -28,16 +28,6 @@
 html{scroll-behavior:smooth}
 body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-break:keep-all;overflow-wrap:break-word;overflow-x:hidden;line-height:1.7}
 
-/* ===== NOREN INTRO ===== */
-.noren{position:fixed;inset:0;z-index:10000;display:flex;pointer-events:none}
-.noren-left,.noren-right{width:50%;height:100%;position:relative;transition:transform 1.2s cubic-bezier(.77,0,.18,1)}
-.noren-left{background:var(--bg-deep);transform-origin:left center}
-.noren-right{background:var(--bg-deep);transform-origin:right center}
-.noren.open .noren-left{transform:translateX(-100%)}
-.noren.open .noren-right{transform:translateX(100%)}
-.noren-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);writing-mode:vertical-rl;font:400 28px/1.6 var(--font-display);color:var(--accent);letter-spacing:8px;white-space:nowrap;opacity:1;transition:opacity .4s}
-.noren.open .noren-text{opacity:0}
-
 /* ===== TATEGAKI (세로쓰기 장식) ===== */
 .tategaki{position:absolute;writing-mode:vertical-rl;font:italic 14px/1 var(--font-display);color:rgba(212,165,116,.08);letter-spacing:6px;white-space:nowrap;pointer-events:none;user-select:none}
 
@@ -228,12 +218,6 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 </style>
 </head>
 <body id="top">
-
-<!-- ===== NOREN INTRO ===== -->
-<div class="noren" id="noren">
-  <div class="noren-left"><div class="noren-text">串</div></div>
-  <div class="noren-right"><div class="noren-text">櫛</div></div>
-</div>
 
 <!-- ===== LANTERN GLOW ===== -->
 <div class="lantern lantern-1"></div>
@@ -512,15 +496,6 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 </div>
 
 <script>
-/* ===== NOREN INTRO ===== */
-(function(){
-  var n=document.getElementById('noren');
-  if(!n)return;
-  document.body.style.overflow='hidden';
-  setTimeout(function(){n.classList.add('open');document.body.style.overflow=''},1200);
-  setTimeout(function(){n.style.display='none'},2500);
-})();
-
 /* ===== CURSOR ===== */
 (function(){
   if('ontouchstart' in window){document.querySelector('.cur-dot').style.display='none';document.querySelector('.cur-ring').style.display='none';return}
