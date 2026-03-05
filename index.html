@@ -109,7 +109,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px;align-items:center}
 .about-img{aspect-ratio:4/5;border-radius:2px;overflow:hidden}
 .about-img .ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
-.about-bg{background:linear-gradient(135deg,#2A1F14,#1E1510);width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--fg-muted);font-size:13px}
+.about-bg{background:url('https://images.unsplash.com/photo-1554502078-ef0fc409efce?w=800&q=80') center/cover no-repeat;width:100%;height:100%}
 .about-text{display:flex;flex-direction:column;gap:20px}
 .about-quote{font:italic 20px/1.6 var(--font-display);color:var(--primary);border-left:2px solid var(--accent);padding-left:20px}
 .about-p{font:300 14px/1.9 var(--font-body);color:var(--fg-dim)}
@@ -126,12 +126,12 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 .menu-card-name{font:700 18px/1.3 var(--font-display);color:var(--primary);margin-bottom:8px;white-space:nowrap}
 .menu-card-desc{font:300 13px/1.7 var(--font-body);color:var(--fg-muted);margin-bottom:16px}
 .menu-card-price{font:400 14px/1 var(--font-mono);color:var(--accent);white-space:nowrap}
-.menuBg1{background:linear-gradient(135deg,#3D2B1F,#5C3D2E)}
-.menuBg2{background:linear-gradient(135deg,#2E3A2E,#1F2B1F)}
-.menuBg3{background:linear-gradient(135deg,#2B2A3D,#1F1E30)}
-.menuBg4{background:linear-gradient(135deg,#3D3526,#2E2A1F)}
-.menuBg5{background:linear-gradient(135deg,#2A2F3D,#1E2430)}
-.menuBg6{background:linear-gradient(135deg,#3D2B35,#2E1F28)}
+.menuBg1{background:url('https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=800&q=80') center/cover}
+.menuBg2{background:url('https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=800&q=80') center/cover}
+.menuBg3{background:url('https://images.unsplash.com/photo-1504544750208-dc0358e63f7f?w=800&q=80') center/cover}
+.menuBg4{background:url('https://images.unsplash.com/photo-1580822184713-fc5400e7fe10?w=800&q=80') center/cover}
+.menuBg5{background:url('https://images.unsplash.com/photo-1590301157890-4810ed352733?w=800&q=80') center/cover}
+.menuBg6{background:url('https://images.unsplash.com/photo-1553621042-f6e147245754?w=800&q=80') center/cover}
 
 /* ===== GALLERY — HOVER REVEAL ===== */
 .gallery{background:var(--bg)}
@@ -144,10 +144,10 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 .gallery-tag{font:300 11px/1 var(--font-mono);color:var(--fg-muted);letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
 .gallery-reveal{position:absolute;right:120px;top:50%;transform:translateY(-50%) scale(.9);width:200px;height:140px;border-radius:2px;opacity:0;transition:opacity .4s,transform .4s;pointer-events:none;z-index:2}
 .gallery-item:hover .gallery-reveal{opacity:1;transform:translateY(-50%) scale(1)}
-.galBg1{background:linear-gradient(135deg,#4A3728,#2D1F14)}
-.galBg2{background:linear-gradient(135deg,#28364A,#141F2D)}
-.galBg3{background:linear-gradient(135deg,#4A2836,#2D141F)}
-.galBg4{background:linear-gradient(135deg,#364A28,#1F2D14)}
+.galBg1{background:url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80') center/cover}
+.galBg2{background:url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&q=80') center/cover}
+.galBg3{background:url('https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?w=800&q=80') center/cover}
+.galBg4{background:url('https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=800&q=80') center/cover}
 
 /* ===== DRINKS ===== */
 .drinks{background:var(--bg)}
@@ -275,7 +275,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
     <h2 class="section-title rv rv-d1">카운터 너머의<br>작은 세계</h2>
     <div class="about-grid">
       <div class="about-img rv rv-d2">
-        <div class="ph"><div class="about-bg aboutBg1"></div></div>
+        <div class="about-bg aboutBg1"></div>
       </div>
       <div class="about-text">
         <blockquote class="about-quote rv rv-d2">"좋은 꼬치 하나에 좋은 술 한 잔이면,<br>그날은 좋은 날입니다."</blockquote>
@@ -526,19 +526,18 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 /* ===== LIGHTBOX ===== */
 (function(){
   var bgMap={
-    'galBg1':'linear-gradient(135deg,#4A3728,#2D1F14)',
-    'galBg2':'linear-gradient(135deg,#28364A,#141F2D)',
-    'galBg3':'linear-gradient(135deg,#4A2836,#2D141F)',
-    'galBg4':'linear-gradient(135deg,#364A28,#1F2D14)',
-    'menuBg1':'linear-gradient(135deg,#3D2B1F,#5C3D2E)',
-    'menuBg2':'linear-gradient(135deg,#2E3A2E,#1F2B1F)',
-    'menuBg3':'linear-gradient(135deg,#2B2A3D,#1F1E30)',
-    'menuBg4':'linear-gradient(135deg,#3D3526,#2E2A1F)',
-    'menuBg5':'linear-gradient(135deg,#2A2F3D,#1E2430)',
-    'menuBg6':'linear-gradient(135deg,#3D2B35,#2E1F28)',
-    'aboutBg1':'linear-gradient(135deg,#2A1F14,#1E1510)'
+    'galBg1':'url(https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=80) center/cover',
+    'galBg2':'url(https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1200&q=80) center/cover',
+    'galBg3':'url(https://images.unsplash.com/photo-1553361371-9b22f78e8b1d?w=1200&q=80) center/cover',
+    'galBg4':'url(https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=1200&q=80) center/cover',
+    'menuBg1':'url(https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=1200&q=80) center/cover',
+    'menuBg2':'url(https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=1200&q=80) center/cover',
+    'menuBg3':'url(https://images.unsplash.com/photo-1504544750208-dc0358e63f7f?w=1200&q=80) center/cover',
+    'menuBg4':'url(https://images.unsplash.com/photo-1580822184713-fc5400e7fe10?w=1200&q=80) center/cover',
+    'menuBg5':'url(https://images.unsplash.com/photo-1590301157890-4810ed352733?w=1200&q=80) center/cover',
+    'menuBg6':'url(https://images.unsplash.com/photo-1553621042-f6e147245754?w=1200&q=80) center/cover',
+    'aboutBg1':'url(https://images.unsplash.com/photo-1554502078-ef0fc409efce?w=1200&q=80) center/cover'
   };
-  var phSVG='<svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="rgba(245,240,232,.15)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>';
   var lb=document.getElementById('lb'),lbImg=document.getElementById('lbImg'),keys=Object.keys(bgMap),idx=0;
   function openLb(cls){idx=keys.indexOf(cls);if(idx<0)idx=0;renderLb()}
   function renderLb(){lbImg.style.background=bgMap[keys[idx]];lbImg.style.width='70vw';lbImg.style.height='50vh';lbImg.innerHTML='';lb.classList.add('open');document.body.style.overflow='hidden'}
