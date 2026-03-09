@@ -11,6 +11,33 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Manrope:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+
+<!-- ===== JSON-LD ===== -->
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Restaurant",
+  "name":"KUSHI 쿠시",
+  "description":"골목 끝 작은 이자카야 쿠시. 정성스러운 꼬치와 한 잔의 사케가 있는 곳.",
+  "image":"https://images.unsplash.com/photo-1769265114286-a78c794e6278?w=1400&q=80",
+  "servesCuisine":"Japanese Izakaya",
+  "priceRange":"₩₩",
+  "address":{
+    "@type":"PostalAddress",
+    "streetAddress":"이태원동 00-00 골목 안쪽 지하 1층",
+    "addressLocality":"서울",
+    "addressRegion":"용산구",
+    "postalCode":"04401",
+    "addressCountry":"KR"
+  },
+  "telephone":"02-000-0000",
+  "openingHoursSpecification":[
+    {"@type":"OpeningHoursSpecification","dayOfWeek":["Tuesday","Wednesday","Thursday","Friday","Saturday"],"opens":"18:00","closes":"24:00"}
+  ],
+  "url":"https://dongboweb-kushi.vercel.app"
+}
+</script>
+
 <style>
 /* ===== RESET & VARIABLES ===== */
 *{margin:0;padding:0;box-sizing:border-box}
@@ -28,6 +55,33 @@
 ::selection{background:var(--selection-bg);color:var(--selection-fg)}
 html{scroll-behavior:smooth}
 body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-break:keep-all;overflow-wrap:break-word;overflow-x:hidden;line-height:1.7}
+
+/* ===== PRELOADER ===== */
+.preloader{position:fixed;inset:0;z-index:9000;background:var(--bg-deep);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s ease,visibility .6s ease}
+.preloader.done{opacity:0;visibility:hidden;pointer-events:none}
+.pre-kanji{font:400 72px/1 var(--font-display);color:var(--accent);opacity:0;animation:preKanjiIn 1s .2s ease forwards;position:relative}
+.pre-smoke{position:absolute;bottom:100%;left:50%;width:6px;height:6px;border-radius:50%;background:rgba(245,240,232,.15);filter:blur(6px);opacity:0;animation:preSmokeRise 2s ease-out infinite}
+.pre-smoke:nth-child(2){left:40%;animation-delay:.4s}
+.pre-smoke:nth-child(3){left:60%;animation-delay:.8s}
+.pre-smoke:nth-child(4){left:45%;animation-delay:1.2s}
+.pre-smoke:nth-child(5){left:55%;animation-delay:1.6s}
+@keyframes preSmokeRise{0%{opacity:0;transform:translateY(0) scale(.5)}20%{opacity:.5}100%{opacity:0;transform:translateY(-60px) scale(1.5) translateX(8px)}}
+@keyframes preKanjiIn{0%{opacity:0;transform:scale(.8)}100%{opacity:1;transform:scale(1)}}
+.pre-line{width:40px;height:2px;background:var(--accent);margin-top:20px;opacity:0;animation:preLineIn .6s .8s ease forwards;transform:scaleX(0);transform-origin:center}
+@keyframes preLineIn{to{opacity:1;transform:scaleX(1)}}
+.pre-sub{font:300 12px/1 var(--font-mono);color:var(--fg-muted);letter-spacing:3px;margin-top:16px;opacity:0;animation:preSubIn .5s 1s ease forwards}
+@keyframes preSubIn{to{opacity:1}}
+
+/* ===== SCROLL PROGRESS BAR ===== */
+.scroll-progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:150;pointer-events:none}
+.scroll-progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),rgba(212,165,116,.3));transition:width .1s linear}
+
+/* ===== TOAST SYSTEM ===== */
+.toast-container{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:300;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}
+.toast{padding:14px 28px;background:rgba(20,30,48,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(212,165,116,.15);border-radius:2px;font:400 13px/1.5 var(--font-body);color:var(--fg-dim);opacity:0;transform:translateY(12px);animation:toastIn .35s ease forwards;pointer-events:auto}
+.toast.out{animation:toastOut .3s ease forwards}
+@keyframes toastIn{to{opacity:1;transform:none}}
+@keyframes toastOut{to{opacity:0;transform:translateY(-8px)}}
 
 /* ===== TATEGAKI (세로쓰기 장식) ===== */
 .tategaki{position:absolute;writing-mode:vertical-rl;font:italic 14px/1 var(--font-display);color:rgba(212,165,116,.08);letter-spacing:6px;white-space:nowrap;pointer-events:none;user-select:none}
@@ -82,6 +136,10 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 .nav-overlay.open .nav-menu li:nth-child(3){transition-delay:.2s}
 .nav-overlay.open .nav-menu li:nth-child(4){transition-delay:.25s}
 .nav-overlay.open .nav-menu li:nth-child(5){transition-delay:.3s}
+.nav-overlay.open .nav-menu li:nth-child(6){transition-delay:.35s}
+.nav-overlay.open .nav-menu li:nth-child(7){transition-delay:.4s}
+.nav-overlay.open .nav-menu li:nth-child(8){transition-delay:.45s}
+.nav-overlay.open .nav-menu li:nth-child(9){transition-delay:.5s}
 .nav-menu a{font:400 32px/1.3 var(--font-display);color:var(--fg-dim);text-decoration:none;letter-spacing:2px;transition:color .3s,letter-spacing .3s}
 .nav-menu a:hover{color:var(--accent);letter-spacing:6px}
 .nav-overlay-sub{margin-top:40px;font:300 13px/1 var(--font-body);color:var(--fg-muted);letter-spacing:1px}
@@ -128,6 +186,17 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 .about-quote{font:italic 20px/1.6 var(--font-display);color:var(--primary);border-left:2px solid var(--accent);padding-left:20px}
 .about-p{font:300 14px/1.9 var(--font-body);color:var(--fg-dim)}
 
+/* ===== STORY — CHEF PHILOSOPHY ===== */
+.story-section{background:var(--bg-deep);position:relative;overflow:hidden}
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px;align-items:start}
+.story-text{display:flex;flex-direction:column;gap:16px}
+.story-text p{font:300 14px/1.9 var(--font-body);color:var(--fg-dim)}
+.story-stats{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:8px}
+.story-stat{text-align:center;padding:24px 16px;border:1px solid var(--border);background:var(--card)}
+.story-stat .counter{font:700 32px/1 var(--font-display);color:var(--accent);display:block;margin-bottom:8px}
+.story-stat .counter-suffix{font:700 20px/1 var(--font-display);color:var(--accent)}
+.story-stat span:last-child{font:300 12px/1.4 var(--font-body);color:var(--fg-muted);display:block;white-space:nowrap}
+
 /* ===== MENU — HOVER REVEAL CARDS ===== */
 .menu{background:var(--bg-deep)}
 .menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:48px}
@@ -148,6 +217,56 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 .menuBg5{background:url('https://images.unsplash.com/photo-1708597525178-6c302364f37c?w=800&q=80') center/cover}
 .menuBg6{background:url('https://images.unsplash.com/photo-1596815390511-58869bc64193?w=800&q=80') center/cover}
 
+/* ===== DRINKS ===== */
+.drinks{background:var(--bg)}
+.drinks-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px}
+.drinks-col{}
+.drinks-cat{font:700 13px/1 var(--font-display);color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.drinks-item{display:flex;align-items:baseline;gap:8px;padding:10px 0;transition:padding-left .3s}
+.drinks-item:hover{padding-left:8px}
+.drinks-item:hover .drinks-name{color:var(--primary)}
+.drinks-item:hover .drinks-price{color:var(--primary)}
+.drinks-name{font:400 15px/1.4 var(--font-body);color:var(--fg-dim);white-space:nowrap;transition:color .3s}
+.drinks-line{flex:1;border-bottom:1px dotted var(--border);margin:0 4px;min-width:20px}
+.drinks-price{font:400 13px/1 var(--font-mono);color:var(--accent);white-space:nowrap;transition:color .3s}
+@media(max-width:768px){
+  .drinks-grid{grid-template-columns:1fr;gap:36px}
+}
+
+/* ===== COURSE MENU ACCORDION ===== */
+.course-section{background:var(--bg-warm)}
+.course-list{margin-top:48px;max-width:720px}
+.course-item{border-bottom:1px solid var(--border)}
+.course-item:first-child{border-top:1px solid var(--border)}
+.course-q{display:flex;align-items:center;justify-content:space-between;padding:24px 0;cursor:pointer;gap:16px;background:none;border:none;width:100%;text-align:left;font-family:inherit}
+.course-q:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.course-q-text{flex:1}
+.course-q-name{font:500 18px/1.4 var(--font-display);color:var(--primary);margin-bottom:4px;display:block}
+.course-q-price{font:400 14px/1 var(--font-mono);color:var(--accent);display:block}
+.course-q-icon{width:24px;height:24px;position:relative;flex-shrink:0}
+.course-q-icon::before,.course-q-icon::after{content:'';position:absolute;background:var(--accent);border-radius:1px;transition:transform .3s ease}
+.course-q-icon::before{width:14px;height:2px;top:11px;left:5px}
+.course-q-icon::after{width:2px;height:14px;top:5px;left:11px}
+.course-item.open .course-q-icon::after{transform:rotate(90deg)}
+.course-a{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.course-a-inner{padding:0 0 24px;font:300 14px/1.9 var(--font-body);color:var(--fg-dim)}
+.course-a-inner strong{color:var(--primary);font-weight:500}
+.course-a-inner .course-note{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font:italic 13px/1.6 var(--font-display);color:var(--fg-muted)}
+
+/* ===== SAKE PAIRING GUIDE ===== */
+.pairing-section{background:var(--bg-deep)}
+.pair-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.pair-card{padding:32px 24px;background:var(--card);border:1px solid var(--border);transition:border-color .4s,background .4s}
+.pair-card:hover{border-color:rgba(212,165,116,.2);background:var(--card-hover)}
+.pair-label{font:300 10px/1 var(--font-mono);color:var(--fg-muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px}
+.pair-skewer{font:700 17px/1.3 var(--font-display);color:var(--primary);margin-bottom:4px}
+.pair-plus{font:300 14px/1 var(--font-body);color:var(--fg-muted);margin:8px 0}
+.pair-drink{font:italic 15px/1.3 var(--font-display);color:var(--accent);margin-bottom:16px}
+.pair-note{font:300 13px/1.7 var(--font-body);color:var(--fg-dim)}
+.pair-match{display:flex;gap:4px;margin-top:16px}
+.pair-match-dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.pair-match-dot.dim{opacity:.2}
+
 /* ===== GALLERY — HOVER REVEAL ===== */
 .gallery{background:var(--bg)}
 .gallery-list{margin-top:48px;display:flex;flex-direction:column}
@@ -166,21 +285,181 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 .galBg3{background:url('https://images.unsplash.com/photo-1771517358687-fae8da0345ae?w=800&q=80') center/cover}
 .galBg4{background:url('https://images.unsplash.com/photo-1769870738355-fefc0647a9f2?w=800&q=80') center/cover}
 
-/* ===== DRINKS ===== */
-.drinks{background:var(--bg)}
-.drinks-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px}
-.drinks-col{}
-.drinks-cat{font:700 13px/1 var(--font-display);color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid var(--border)}
-.drinks-item{display:flex;align-items:baseline;gap:8px;padding:10px 0;transition:padding-left .3s}
-.drinks-item:hover{padding-left:8px}
-.drinks-item:hover .drinks-name{color:var(--primary)}
-.drinks-item:hover .drinks-price{color:var(--primary)}
-.drinks-name{font:400 15px/1.4 var(--font-body);color:var(--fg-dim);white-space:nowrap;transition:color .3s}
-.drinks-line{flex:1;border-bottom:1px dotted var(--border);margin:0 4px;min-width:20px}
-.drinks-price{font:400 13px/1 var(--font-mono);color:var(--accent);white-space:nowrap;transition:color .3s}
-@media(max-width:768px){
-  .drinks-grid{grid-template-columns:1fr;gap:36px}
+/* ===== MARQUEE STRIP ===== */
+.marquee-strip{
+  overflow:hidden;
+  white-space:nowrap;
+  background:var(--bg-deep);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:14px 0;
 }
+.marquee-track{
+  display:inline-flex;
+  animation:marqueeScroll 30s linear infinite;
+}
+.marquee-track span{
+  font:italic 13px/1 var(--font-display);
+  color:var(--fg-muted);
+  letter-spacing:3px;
+  padding:0 32px;
+  white-space:nowrap;
+}
+.marquee-track .dot{
+  color:var(--accent);
+  opacity:.4;
+}
+@keyframes marqueeScroll{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-50%)}
+}
+
+/* ===== SEASONAL CTA BANNER ===== */
+.seasonal-banner{
+  background:linear-gradient(135deg,var(--bg-deep) 0%,var(--bg-warm) 100%);
+  position:relative;
+  overflow:hidden;
+}
+.seasonal-inner{
+  max-width:1080px;
+  margin:0 auto;
+  padding:0 32px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:40px;
+}
+.seasonal-text{
+  flex:1;
+}
+.seasonal-eyebrow{
+  font:400 11px/1 var(--font-mono);
+  color:var(--accent);
+  letter-spacing:4px;
+  text-transform:uppercase;
+  margin-bottom:16px;
+}
+.seasonal-heading{
+  font:400 30px/1.3 var(--font-display);
+  color:var(--primary);
+  margin-bottom:12px;
+}
+.seasonal-heading em{
+  font-style:italic;
+  color:var(--accent);
+}
+.seasonal-body{
+  font:300 14px/1.8 var(--font-body);
+  color:var(--fg-dim);
+  max-width:480px;
+}
+.seasonal-cta{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font:500 13px/1 var(--font-body);
+  color:var(--bg);
+  background:var(--accent);
+  padding:14px 32px;
+  border-radius:0;
+  text-decoration:none;
+  letter-spacing:1px;
+  transition:background .3s;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.seasonal-cta:hover{
+  background:#C4955A;
+}
+.seasonal-deco{
+  position:absolute;
+  right:-40px;
+  top:-20px;
+  font:400 180px/1 var(--font-display);
+  color:rgba(212,165,116,.03);
+  pointer-events:none;
+  user-select:none;
+}
+
+/* ===== INSTAGRAM CTA ===== */
+.insta-section{
+  background:var(--bg-warm);
+  text-align:center;
+}
+.insta-icon{
+  width:40px;
+  height:40px;
+  margin:0 auto 20px;
+  opacity:.6;
+}
+.insta-icon svg{
+  width:100%;
+  height:100%;
+}
+.insta-handle{
+  font:italic 16px/1 var(--font-display);
+  color:var(--accent);
+  text-decoration:none;
+  letter-spacing:2px;
+  transition:opacity .3s;
+  display:inline-block;
+  margin-top:12px;
+}
+.insta-handle:hover{
+  opacity:.7;
+}
+.insta-desc{
+  font:300 14px/1.7 var(--font-body);
+  color:var(--fg-dim);
+  margin-top:12px;
+  max-width:400px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+/* ===== FAQ ACCORDION ===== */
+.faq-section{background:var(--bg)}
+.faq-list{margin-top:48px;max-width:720px}
+.faq-item{border-bottom:1px solid var(--border)}
+.faq-item:first-child{border-top:1px solid var(--border)}
+.faq-q{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:20px 0;
+  cursor:pointer;
+  gap:16px;
+  background:none;
+  border:none;
+  width:100%;
+  text-align:left;
+  font:500 16px/1.5 var(--font-body);
+  color:var(--primary);
+  font-family:inherit;
+}
+.faq-q:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:2px;
+}
+.faq-q-icon{
+  width:20px;
+  height:20px;
+  position:relative;
+  flex-shrink:0;
+}
+.faq-q-icon::before,
+.faq-q-icon::after{
+  content:'';
+  position:absolute;
+  background:var(--accent);
+  border-radius:1px;
+  transition:transform .3s ease;
+}
+.faq-q-icon::before{width:12px;height:2px;top:9px;left:4px}
+.faq-q-icon::after{width:2px;height:12px;top:4px;left:9px}
+.faq-item.open .faq-q-icon::after{transform:rotate(90deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.faq-a-inner{padding:0 0 20px;font:300 14px/1.8 var(--font-body);color:var(--fg-dim)}
 
 /* ===== INFO — IMMERSIVE BAND (WARM) ===== */
 .info{background:var(--bg-warm)}
@@ -192,11 +471,25 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 .info-text a:hover{text-decoration:underline}
 
 /* ===== FOOTER ===== */
-.footer{background:var(--bg-deep);padding:48px 0;text-align:center;position:relative}
-.footer-line{width:40px;height:1px;background:var(--accent);margin:0 auto 24px;opacity:.4}
-.footer-brand{font:700 14px/1 var(--font-display);color:var(--primary);letter-spacing:3px;margin-bottom:8px}
-.footer-kanji{font:italic 11px/1 var(--font-display);color:var(--accent);opacity:.3;letter-spacing:4px;margin-bottom:12px}
+.footer-main{background:var(--bg-deep);padding:80px 0 0;position:relative;overflow:hidden}
+.footer-grid{max-width:1080px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;align-items:start}
+.footer-brand-col{}
+.footer-brand-name{font:700 20px/1 var(--font-display);color:var(--primary);letter-spacing:3px;margin-bottom:8px}
+.footer-brand-kanji{font:italic 14px/1 var(--font-display);color:var(--accent);opacity:.4;letter-spacing:4px;margin-bottom:16px}
+.footer-brand-desc{font:300 13px/1.7 var(--font-body);color:var(--fg-muted);max-width:260px}
+.footer-col{}
+.footer-col-title{font:400 10px/1 var(--font-mono);color:var(--accent);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px}
+.footer-col-text{font:300 13px/1.8 var(--font-body);color:var(--fg-dim)}
+.footer-col-text a{color:var(--fg-dim);text-decoration:none;transition:color .3s}
+.footer-col-text a:hover{color:var(--accent)}
+.footer-col-links{list-style:none}
+.footer-col-links li{margin-bottom:8px}
+.footer-col-links a{font:300 13px/1.5 var(--font-body);color:var(--fg-dim);text-decoration:none;transition:color .3s}
+.footer-col-links a:hover{color:var(--accent)}
+.footer-tategaki{position:absolute;right:32px;top:40px;writing-mode:vertical-rl;font:italic 12px/1 var(--font-display);color:rgba(212,165,116,.06);letter-spacing:8px;pointer-events:none;user-select:none}
+.footer-bottom{max-width:1080px;margin:48px auto 0;padding:20px 32px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .footer-copy{font:300 11px/1.6 var(--font-body);color:var(--fg-muted)}
+.footer-copy-accent{font:italic 11px/1 var(--font-display);color:var(--fg-muted);opacity:.5}
 
 /* ===== FLOATING BUTTONS ===== */
 .float-wrap{position:fixed;bottom:24px;right:24px;display:flex;flex-direction:column;gap:10px;z-index:90}
@@ -214,12 +507,75 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 .lb-prev{left:16px}
 .lb-next{right:16px}
 
+/* ===== FOCUS STYLES ===== */
+a:focus-visible,
+button:focus-visible{
+  outline:2px solid var(--accent);
+  outline-offset:2px;
+}
+
+/* ===== SECTION DIVIDER ===== */
+.section-divider{
+  width:40px;
+  height:1px;
+  background:var(--accent);
+  opacity:.3;
+  margin:24px 0;
+}
+
+/* ===== SMOOTH TRANSITIONS (GLOBAL) ===== */
+a{
+  transition:color .3s ease;
+}
+img{
+  max-width:100%;
+  height:auto;
+}
+
+/* ===== PRINT STYLES ===== */
+@media print{
+  .preloader,
+  .nav-bar,
+  .nav-overlay,
+  .float-wrap,
+  .scroll-progress,
+  .toast-container,
+  .lantern,
+  .cur-dot,
+  .cur-ring,
+  .cur-label,
+  .lb{
+    display:none!important;
+  }
+  body{
+    background:#fff!important;
+    color:#000!important;
+  }
+}
+
+/* ===== PREFERS REDUCED MOTION ===== */
+@media(prefers-reduced-motion:reduce){
+  .smoke,.lantern,.hero-morph,.hero-scroll-line,.pre-smoke{animation:none!important}
+  .hero-title .char{animation:none!important;opacity:1!important;transform:none!important}
+  .preloader{transition:none}
+  .rv{transition:none;opacity:1;transform:none}
+}
+
 /* ===== RESPONSIVE — TABLET ===== */
 @media(max-width:1024px)and(min-width:769px){
   .hero-title{font-size:40px}
   .about-grid{gap:32px}
   .menu-grid{grid-template-columns:repeat(2,1fr)}
   .info-grid{grid-template-columns:repeat(2,1fr)}
+  .story-grid{gap:32px}
+  .story-stats{gap:16px}
+  .pair-grid{grid-template-columns:1fr 1fr;gap:20px}
+  .pair-card:last-child{grid-column:span 2;max-width:50%;justify-self:center}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:32px}
+  .seasonal-heading{font-size:26px}
+}
+@media(prefers-reduced-motion:reduce){
+  .marquee-track{animation:none!important}
 }
 /* ===== RESPONSIVE — MOBILE ===== */
 @media(max-width:768px){
@@ -236,10 +592,46 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
   .section-title{font-size:28px}
   .nav-menu a{font-size:24px}
   .float-wrap{bottom:16px;right:16px}
+  .story-grid{grid-template-columns:1fr}
+  .story-stats{grid-template-columns:1fr 1fr;gap:16px}
+  .pair-grid{grid-template-columns:1fr;gap:16px}
+  .pair-card:last-child{max-width:100%}
+  .footer-grid{grid-template-columns:1fr;gap:32px}
+  .footer-tategaki{display:none}
+  .footer-bottom{flex-direction:column;gap:8px;text-align:center}
+  .course-q-name{font-size:16px}
+  .faq-q{font-size:15px}
+  .pre-kanji{font-size:56px}
+  .seasonal-inner{flex-direction:column;text-align:center;gap:24px}
+  .seasonal-heading{font-size:24px}
+  .seasonal-body{margin:0 auto}
+  .seasonal-deco{font-size:120px;right:-20px;top:-10px}
+  .insta-desc{font-size:13px}
+  .marquee-track span{font-size:11px;padding:0 20px}
 }
 </style>
 </head>
 <body id="top">
+
+<!-- ===== PRELOADER ===== -->
+<div class="preloader" id="preloader">
+  <div class="pre-kanji">
+    <div class="pre-smoke"></div>
+    <div class="pre-smoke"></div>
+    <div class="pre-smoke"></div>
+    <div class="pre-smoke"></div>
+    <div class="pre-smoke"></div>
+    串
+  </div>
+  <div class="pre-line"></div>
+  <div class="pre-sub">Izakaya &middot; Itaewon</div>
+</div>
+
+<!-- ===== SCROLL PROGRESS BAR ===== -->
+<div class="scroll-progress"><div class="scroll-progress-bar" id="scrollBar"></div></div>
+
+<!-- ===== TOAST CONTAINER ===== -->
+<div class="toast-container" id="toastContainer"></div>
 
 <!-- ===== LANTERN GLOW ===== -->
 <div class="lantern lantern-1"></div>
@@ -260,9 +652,13 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 <div class="nav-overlay">
   <ul class="nav-menu">
     <li><a href="#about">About</a></li>
+    <li><a href="#story">Story</a></li>
     <li><a href="#menu">Menu</a></li>
     <li><a href="#drinks">Drinks</a></li>
+    <li><a href="#course">Course</a></li>
+    <li><a href="#pairing">Pairing</a></li>
     <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#faq">FAQ</a></li>
     <li><a href="#info">Info</a></li>
   </ul>
   <div class="nav-overlay-sub">골목 끝 작은 이자카야</div>
@@ -306,6 +702,57 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
         <blockquote class="about-quote rv rv-d2">"좋은 꼬치 하나에 좋은 술 한 잔이면,<br>그날은 좋은 날입니다."</blockquote>
         <p class="about-p rv rv-d3">쿠시는 8석 남짓한 작은 이자카야입니다. 매일 아침 시장에서 고른 신선한 재료로, 주인장이 직접 꼬치를 굽고 술을 따릅니다.</p>
         <p class="about-p rv rv-d4">화려하지 않지만, 한 꼬치 한 꼬치에 정성을 담습니다. 골목 끝 조용한 자리에서 오늘 하루를 마무리하세요.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MARQUEE STRIP ===== -->
+<div class="marquee-strip" aria-hidden="true">
+  <div class="marquee-track">
+    <span>串焼 Yakitori</span><span class="dot">&middot;</span>
+    <span>居酒屋 Izakaya</span><span class="dot">&middot;</span>
+    <span>日本酒 Nihonshu</span><span class="dot">&middot;</span>
+    <span>一期一会 Ichi-go Ichi-e</span><span class="dot">&middot;</span>
+    <span>炭火 Charcoal</span><span class="dot">&middot;</span>
+    <span>真心 Sincerity</span><span class="dot">&middot;</span>
+    <span>串焼 Yakitori</span><span class="dot">&middot;</span>
+    <span>居酒屋 Izakaya</span><span class="dot">&middot;</span>
+    <span>日本酒 Nihonshu</span><span class="dot">&middot;</span>
+    <span>一期一会 Ichi-go Ichi-e</span><span class="dot">&middot;</span>
+    <span>炭火 Charcoal</span><span class="dot">&middot;</span>
+    <span>真心 Sincerity</span><span class="dot">&middot;</span>
+  </div>
+</div>
+
+<!-- ===== STORY — CHEF PHILOSOPHY ===== -->
+<section class="story-section section" id="story">
+  <div class="section-inner">
+    <div class="section-label rv">Story</div>
+    <h2 class="section-title rv rv-d1">주인장의 이야기</h2>
+    <div class="story-grid">
+      <div class="story-text">
+        <p class="rv rv-d2">도쿄 골목 야키토리야에서 2년, 서울로 돌아와 가장 하고 싶었던 건 하나였습니다. 카운터 너머에서 손님 눈을 보며 꼬치를 굽는 것.</p>
+        <p class="rv rv-d3">이태원 골목 지하, 8석짜리 작은 공간을 열었습니다. 매일 아침 시장에 가서 그날의 재료를 직접 고릅니다. 닭은 당일 도축, 채소는 가락시장에서 눈으로 확인한 것만.</p>
+        <p class="rv rv-d4">비싼 재료보다 좋은 타이밍이 중요합니다. 숯불 위에서 1분, 그 1분이 맛을 결정합니다. 빈수레가 요란하다고 했습니다. 쿠시도 조용하지만 깊은 맛을 내는 곳이고 싶습니다.</p>
+      </div>
+      <div class="story-stats">
+        <div class="story-stat rv rv-d1">
+          <span class="counter" data-target="2024" data-suffix="">2024</span>
+          <span>Since</span>
+        </div>
+        <div class="story-stat rv rv-d2">
+          <span class="counter" data-target="8" data-suffix="석">8<span class="counter-suffix">석</span></span>
+          <span>한정 좌석</span>
+        </div>
+        <div class="story-stat rv rv-d3">
+          <span class="counter" data-target="365" data-suffix="">365</span>
+          <span>매일 아침 시장</span>
+        </div>
+        <div class="story-stat rv rv-d4">
+          <span class="counter" data-target="30" data-suffix="+">30<span class="counter-suffix">+</span></span>
+          <span>사케 리스트</span>
+        </div>
       </div>
     </div>
   </div>
@@ -438,6 +885,121 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
   </div>
 </section>
 
+<!-- ===== COURSE MENU ===== -->
+<section class="course-section section" id="course">
+  <div class="section-inner">
+    <div class="section-label rv">Course</div>
+    <h2 class="section-title rv rv-d1">코스 메뉴</h2>
+    <p class="section-desc rv rv-d2">주인장이 구성하는 오마카세 코스.</p>
+    <div class="course-list">
+      <div class="course-item rv rv-d1">
+        <button class="course-q" role="button" aria-expanded="false" tabindex="0">
+          <div class="course-q-text">
+            <span class="course-q-name">오마카세 5종</span>
+            <span class="course-q-price">22,000원</span>
+          </div>
+          <div class="course-q-icon"></div>
+        </button>
+        <div class="course-a" role="region">
+          <div class="course-a-inner">
+            주인장이 고른 5가지 꼬치 세트. 계절 재료를 반영하여 매일 구성이 달라집니다.<br><br>
+            <strong>포함 품목:</strong> 모모(닭다리살), 네기마(파닭), 츠쿠네(닭완자), 하츠(심장), 계절 야채 꼬치<br><br>
+            <strong>추천 페어링:</strong> 쿠로 준마이 또는 레몬 하이볼
+            <div class="course-note">* 재료 수급에 따라 일부 품목이 변경될 수 있습니다.</div>
+          </div>
+        </div>
+      </div>
+      <div class="course-item rv rv-d2">
+        <button class="course-q" role="button" aria-expanded="false" tabindex="0">
+          <div class="course-q-text">
+            <span class="course-q-name">오마카세 8종</span>
+            <span class="course-q-price">35,000원</span>
+          </div>
+          <div class="course-q-icon"></div>
+        </button>
+        <div class="course-a" role="region">
+          <div class="course-a-inner">
+            5종 오마카세에 특선 3종을 추가한 프리미엄 구성. 와규와 해산물이 포함됩니다.<br><br>
+            <strong>포함 품목:</strong> 기본 5종 + 와규 꼬치, 새우 꼬치, 시이타케(표고버섯)<br><br>
+            <strong>추천 페어링:</strong> 준마이 다이긴조
+            <div class="course-note">* 와규는 한정 수량으로 조기 품절될 수 있습니다.</div>
+          </div>
+        </div>
+      </div>
+      <div class="course-item rv rv-d3">
+        <button class="course-q" role="button" aria-expanded="false" tabindex="0">
+          <div class="course-q-text">
+            <span class="course-q-name">코스 + 사케 페어링</span>
+            <span class="course-q-price">55,000원</span>
+          </div>
+          <div class="course-q-icon"></div>
+        </button>
+        <div class="course-a" role="region">
+          <div class="course-a-inner">
+            8종 오마카세에 사케 3잔 페어링을 더한 풀 코스. 꼬치마다 어울리는 술을 주인장이 직접 골라 따릅니다.<br><br>
+            <strong>포함 품목:</strong> 오마카세 8종 + 사케 3잔 (준마이 다이긴조, 니고리, 유즈 사케)<br><br>
+            <strong>추천 대상:</strong> 사케를 좋아하시거나, 처음 이자카야를 경험하시는 분
+            <div class="course-note">* 사케 종류는 계절과 재고에 따라 변경될 수 있습니다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SAKE PAIRING GUIDE ===== -->
+<section class="pairing-section section" id="pairing">
+  <div class="section-inner">
+    <div class="section-label rv">Pairing</div>
+    <h2 class="section-title rv rv-d1">꼬치와 술의 궁합</h2>
+    <p class="section-desc rv rv-d2">주인장이 추천하는 페어링 가이드.</p>
+    <div class="pair-grid">
+      <div class="pair-card rv rv-d1">
+        <div class="pair-label">Pairing 01</div>
+        <div class="pair-skewer">모모 (닭다리살)</div>
+        <div class="pair-plus">+</div>
+        <div class="pair-drink">준마이 다이긴조</div>
+        <div class="pair-note">육즙 가득한 닭다리살의 감칠맛을 깔끔한 다이긴조가 받아줍니다.</div>
+        <div class="pair-match">
+          <div class="pair-match-dot"></div>
+          <div class="pair-match-dot"></div>
+          <div class="pair-match-dot"></div>
+          <div class="pair-match-dot"></div>
+          <div class="pair-match-dot"></div>
+        </div>
+      </div>
+      <div class="pair-card rv rv-d2">
+        <div class="pair-label">Pairing 02</div>
+        <div class="pair-skewer">시이타케 (표고버섯)</div>
+        <div class="pair-plus">+</div>
+        <div class="pair-drink">니고리</div>
+        <div class="pair-note">표고의 깊은 향과 니고리의 부드러운 단맛이 조화를 이룹니다.</div>
+        <div class="pair-match">
+          <div class="pair-match-dot"></div>
+          <div class="pair-match-dot"></div>
+          <div class="pair-match-dot"></div>
+          <div class="pair-match-dot"></div>
+          <div class="pair-match-dot dim"></div>
+        </div>
+      </div>
+      <div class="pair-card rv rv-d3">
+        <div class="pair-label">Pairing 03</div>
+        <div class="pair-skewer">츠쿠네 (닭완자)</div>
+        <div class="pair-plus">+</div>
+        <div class="pair-drink">레몬 하이볼</div>
+        <div class="pair-note">달걀노른자의 고소함을 레몬의 산미가 깔끔하게 정리합니다.</div>
+        <div class="pair-match">
+          <div class="pair-match-dot"></div>
+          <div class="pair-match-dot"></div>
+          <div class="pair-match-dot"></div>
+          <div class="pair-match-dot"></div>
+          <div class="pair-match-dot dim"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ===== GALLERY ===== -->
 <section class="gallery section" id="gallery">
   <div class="section-inner">
@@ -472,6 +1034,102 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
   </div>
 </section>
 
+<!-- ===== SEASONAL CTA BANNER ===== -->
+<section class="seasonal-banner section">
+  <div class="seasonal-deco" aria-hidden="true">串</div>
+  <div class="seasonal-inner">
+    <div class="seasonal-text">
+      <div class="seasonal-eyebrow rv">Seasonal</div>
+      <h2 class="seasonal-heading rv rv-d1">계절의 <em>맛</em>을<br>만나보세요</h2>
+      <p class="seasonal-body rv rv-d2">매 계절 가장 좋은 재료로 구성하는 한정 오마카세. 제철 해산물과 채소, 그리고 그에 어울리는 사케를 함께 즐겨보세요.</p>
+    </div>
+    <a href="https://pf.kakao.com/_zAqqX" class="seasonal-cta rv rv-d3" target="_blank" rel="noopener noreferrer" data-cursor="Reserve">
+      예약하기 &rarr;
+    </a>
+  </div>
+</section>
+
+<!-- ===== INSTAGRAM CTA ===== -->
+<section class="insta-section section">
+  <div class="section-inner">
+    <div class="insta-icon rv" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+        <circle cx="12" cy="12" r="5"/>
+        <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/>
+      </svg>
+    </div>
+    <div class="section-label rv">Follow Us</div>
+    <h2 class="section-title rv rv-d1" style="text-align:center">쿠시의 하루</h2>
+    <p class="insta-desc rv rv-d2">매일의 재료, 오늘의 꼬치, 골목의 풍경.<br>쿠시의 일상을 인스타그램에서 만나보세요.</p>
+    <a href="https://instagram.com/kushi.official" class="insta-handle rv rv-d3" target="_blank" rel="noopener noreferrer" data-cursor="Instagram">@kushi.official</a>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="faq-section section" id="faq">
+  <div class="section-inner">
+    <div class="section-label rv">FAQ</div>
+    <h2 class="section-title rv rv-d1">자주 묻는 질문</h2>
+    <div class="faq-list">
+      <div class="faq-item rv rv-d1">
+        <button class="faq-q" role="button" aria-expanded="false" tabindex="0">
+          <span>예약은 필수인가요?</span>
+          <div class="faq-q-icon"></div>
+        </button>
+        <div class="faq-a" role="region">
+          <div class="faq-a-inner">8석뿐인 작은 공간이라 예약을 권장합니다. 카카오톡 채널을 통해 예약하시면 대기 없이 편하게 방문하실 수 있습니다. 워크인도 가능하지만 자리가 없을 수 있습니다.</div>
+        </div>
+      </div>
+      <div class="faq-item rv rv-d2">
+        <button class="faq-q" role="button" aria-expanded="false" tabindex="0">
+          <span>혼자 방문해도 되나요?</span>
+          <div class="faq-q-icon"></div>
+        </button>
+        <div class="faq-a" role="region">
+          <div class="faq-a-inner">물론입니다. 카운터석에서 주인장과 이야기를 나누며 식사하시는 분도 많습니다. 혼자 오시는 분들께 특히 편안한 분위기를 만들어 드리고 있습니다.</div>
+        </div>
+      </div>
+      <div class="faq-item rv rv-d3">
+        <button class="faq-q" role="button" aria-expanded="false" tabindex="0">
+          <span>코르키지가 있나요?</span>
+          <div class="faq-q-icon"></div>
+        </button>
+        <div class="faq-a" role="region">
+          <div class="faq-a-inner">죄송합니다만, 외부 주류 반입은 어렵습니다. 대신 30종 이상의 사케와 하이볼을 준비하고 있으니 취향에 맞는 한 잔을 찾아드리겠습니다.</div>
+        </div>
+      </div>
+      <div class="faq-item rv rv-d4">
+        <button class="faq-q" role="button" aria-expanded="false" tabindex="0">
+          <span>알레르기 대응이 가능한가요?</span>
+          <div class="faq-q-icon"></div>
+        </button>
+        <div class="faq-a" role="region">
+          <div class="faq-a-inner">예약 시 알레르기 정보를 말씀해 주시면 가능한 범위 내에서 대체 메뉴를 준비합니다. 갑각류, 달걀, 밀 등 주요 알레르겐에 대해 대응하고 있습니다.</div>
+        </div>
+      </div>
+      <div class="faq-item rv">
+        <button class="faq-q" role="button" aria-expanded="false" tabindex="0">
+          <span>영업 종료 시간은 언제인가요?</span>
+          <div class="faq-q-icon"></div>
+        </button>
+        <div class="faq-a" role="region">
+          <div class="faq-a-inner">화요일부터 토요일까지 18시에 문을 열고 24시에 마감합니다. 다만 재료가 소진되면 조기 마감할 수 있으니, 늦은 시간 방문 시 미리 연락 주시면 좋습니다.</div>
+        </div>
+      </div>
+      <div class="faq-item rv rv-d1">
+        <button class="faq-q" role="button" aria-expanded="false" tabindex="0">
+          <span>주차가 가능한가요?</span>
+          <div class="faq-q-icon"></div>
+        </button>
+        <div class="faq-a" role="region">
+          <div class="faq-a-inner">별도 주차장은 없습니다. 근처 공영주차장이나 대중교통 이용을 권장합니다. 이태원역 3번 출구에서 도보 5분 거리입니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ===== INFO ===== -->
 <section class="info section" id="info">
   <div class="section-inner">
@@ -499,11 +1157,45 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 </section>
 
 <!-- ===== FOOTER ===== -->
-<footer class="footer">
-  <div class="footer-line"></div>
-  <div class="footer-brand">KUSHI.</div>
-  <div class="footer-kanji">串 &middot; 居酒屋</div>
-  <div class="footer-copy">&copy; 2024 KUSHI. All rights reserved.</div>
+<footer class="footer-main">
+  <div class="footer-tategaki">串焼居酒屋 一期一会</div>
+  <div class="footer-grid">
+    <div class="footer-brand-col">
+      <div class="footer-brand-name">KUSHI.</div>
+      <div class="footer-brand-kanji">串 &middot; 居酒屋</div>
+      <div class="footer-brand-desc">이태원 골목 끝, 8석짜리 작은 이자카야. 정성스러운 꼬치와 엄선된 사케가 기다립니다.</div>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Links</div>
+      <ul class="footer-col-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#course">Course</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Hours</div>
+      <div class="footer-col-text">
+        화 — 토 18:00 ~ 24:00<br>
+        일·월 휴무<br>
+        재료 소진 시 조기 마감
+      </div>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Contact</div>
+      <div class="footer-col-text">
+        <a href="tel:02-000-0000">02-000-0000</a><br>
+        <a href="https://instagram.com/kushi.official" target="_blank" rel="noopener noreferrer">@kushi.official</a><br>
+        <a href="https://pf.kakao.com/_zAqqX" target="_blank" rel="noopener noreferrer">카카오톡 문의</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">&copy; 2024 KUSHI. All rights reserved.</div>
+    <div class="footer-copy-accent">串 &middot; Izakaya &middot; Itaewon</div>
+  </div>
 </footer>
 
 <!-- ===== FLOATING BUTTONS ===== -->
@@ -523,6 +1215,15 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
 </div>
 
 <script>
+/* ===== PRELOADER ===== */
+(function(){
+  var pre=document.getElementById('preloader');
+  if(!pre)return;
+  window.addEventListener('load',function(){
+    setTimeout(function(){pre.classList.add('done')},1400);
+  });
+})();
+
 /* ===== HERO TITLE STAGGER ===== */
 (function(){
   var title=document.querySelector('.hero-title');
@@ -571,6 +1272,118 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
   document.querySelectorAll('.nav-menu a').forEach(function(a){a.addEventListener('click',function(){ham.classList.remove('open');ov.classList.remove('open');document.body.style.overflow=''})});
 })();
 
+/* ===== SCROLL PROGRESS BAR ===== */
+(function(){
+  var bar=document.getElementById('scrollBar');
+  if(!bar)return;
+  window.addEventListener('scroll',function(){
+    var h=document.documentElement.scrollHeight-window.innerHeight;
+    if(h<=0)return;
+    bar.style.width=(window.scrollY/h*100)+'%';
+  });
+})();
+
+/* ===== TOAST SYSTEM ===== */
+function showToast(msg){
+  var container=document.getElementById('toastContainer');
+  if(!container)return;
+  var t=document.createElement('div');
+  t.className='toast';
+  t.textContent=msg;
+  container.appendChild(t);
+  setTimeout(function(){t.classList.add('out')},2800);
+  setTimeout(function(){if(t.parentNode)t.parentNode.removeChild(t)},3100);
+}
+
+/* ===== COURSE ACCORDION (SINGLE-OPEN) ===== */
+(function(){
+  var items=document.querySelectorAll('.course-item');
+  items.forEach(function(item){
+    var btn=item.querySelector('.course-q');
+    var ans=item.querySelector('.course-a');
+    if(!btn||!ans)return;
+    btn.addEventListener('click',function(){
+      var isOpen=item.classList.contains('open');
+      items.forEach(function(other){
+        other.classList.remove('open');
+        var otherBtn=other.querySelector('.course-q');
+        var otherAns=other.querySelector('.course-a');
+        if(otherBtn)otherBtn.setAttribute('aria-expanded','false');
+        if(otherAns)otherAns.style.maxHeight=null;
+      });
+      if(!isOpen){
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded','true');
+        ans.style.maxHeight=ans.scrollHeight+'px';
+      }
+    });
+    btn.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();btn.click()}
+    });
+  });
+})();
+
+/* ===== FAQ ACCORDION (SINGLE-OPEN) ===== */
+(function(){
+  var items=document.querySelectorAll('.faq-item');
+  items.forEach(function(item){
+    var btn=item.querySelector('.faq-q');
+    var ans=item.querySelector('.faq-a');
+    if(!btn||!ans)return;
+    btn.addEventListener('click',function(){
+      var isOpen=item.classList.contains('open');
+      items.forEach(function(other){
+        other.classList.remove('open');
+        var otherBtn=other.querySelector('.faq-q');
+        var otherAns=other.querySelector('.faq-a');
+        if(otherBtn)otherBtn.setAttribute('aria-expanded','false');
+        if(otherAns)otherAns.style.maxHeight=null;
+      });
+      if(!isOpen){
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded','true');
+        ans.style.maxHeight=ans.scrollHeight+'px';
+      }
+    });
+    btn.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '){e.preventDefault();btn.click()}
+    });
+  });
+})();
+
+/* ===== COUNTER ANIMATION ===== */
+(function(){
+  var counters=document.querySelectorAll('.counter[data-target]');
+  if(!counters.length)return;
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting)return;
+      obs.unobserve(e.target);
+      var el=e.target;
+      var target=parseInt(el.getAttribute('data-target'),10);
+      var suffix=el.getAttribute('data-suffix')||'';
+      var duration=1600;
+      var start=performance.now();
+      function step(now){
+        var elapsed=now-start;
+        var progress=Math.min(elapsed/duration,1);
+        var eased=1-Math.pow(1-progress,3);
+        var current=Math.round(eased*target);
+        el.textContent=current+(suffix?' ':'');
+        if(suffix){
+          var sfx=document.createElement('span');
+          sfx.className='counter-suffix';
+          sfx.textContent=suffix;
+          el.appendChild(sfx);
+        }
+        if(progress<1)requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  },{threshold:0.5});
+  counters.forEach(function(c){obs.observe(c)});
+})();
+
 /* ===== LIGHTBOX ===== */
 (function(){
   var bgMap={
@@ -588,7 +1401,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--fg);word-brea
   };
   var lb=document.getElementById('lb'),lbImg=document.getElementById('lbImg'),keys=Object.keys(bgMap),idx=0;
   function openLb(cls){idx=keys.indexOf(cls);if(idx<0)idx=0;renderLb()}
-  function renderLb(){lbImg.style.background=bgMap[keys[idx]];lbImg.style.width='70vw';lbImg.style.height='50vh';lbImg.innerHTML='';lb.classList.add('open');document.body.style.overflow='hidden'}
+  function renderLb(){lbImg.style.background=bgMap[keys[idx]];lbImg.style.width='70vw';lbImg.style.height='50vh';while(lbImg.firstChild)lbImg.removeChild(lbImg.firstChild);lb.classList.add('open');document.body.style.overflow='hidden'}
   function closeLb(){lb.classList.remove('open');document.body.style.overflow=''}
   document.getElementById('lbClose').addEventListener('click',closeLb);
   document.getElementById('lbPrev').addEventListener('click',function(){idx=(idx-1+keys.length)%keys.length;renderLb()});
@@ -626,6 +1439,81 @@ document.addEventListener('dragstart',function(e){if(e.target.closest('.ph,.gall
     var i=Math.min(Math.floor(p*(colors.length-1)),colors.length-2);
     var f=p*(colors.length-1)-i;
     document.body.style.backgroundColor=colors[i];
+  });
+})();
+
+/* ===== BACK TO TOP VISIBILITY ===== */
+(function(){
+  var btn=document.querySelector('.float-top');
+  if(!btn)return;
+  btn.style.opacity='0';
+  btn.style.pointerEvents='none';
+  window.addEventListener('scroll',function(){
+    if(window.scrollY>400){
+      btn.style.opacity='.7';
+      btn.style.pointerEvents='auto';
+    }else{
+      btn.style.opacity='0';
+      btn.style.pointerEvents='none';
+    }
+  });
+})();
+
+/* ===== SEASONAL DECO PARALLAX ===== */
+(function(){
+  var deco=document.querySelector('.seasonal-deco');
+  if(!deco)return;
+  var section=deco.closest('.seasonal-banner');
+  if(!section)return;
+  var ticking=false;
+  window.addEventListener('scroll',function(){
+    if(!ticking){
+      requestAnimationFrame(function(){
+        var rect=section.getBoundingClientRect();
+        var inView=rect.top<window.innerHeight&&rect.bottom>0;
+        if(inView){
+          var progress=(window.innerHeight-rect.top)/(window.innerHeight+rect.height);
+          deco.style.transform='translateY('+(progress*30-15)+'px)';
+        }
+        ticking=false;
+      });
+      ticking=true;
+    }
+  });
+})();
+
+/* ===== NAV ACTIVE SECTION HIGHLIGHT ===== */
+(function(){
+  var sections=document.querySelectorAll('section[id]');
+  var navLinks=document.querySelectorAll('.nav-menu a');
+  if(!sections.length||!navLinks.length)return;
+  var observer=new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        var id=entry.target.getAttribute('id');
+        navLinks.forEach(function(link){
+          if(link.getAttribute('href')==='#'+id){
+            link.style.color='var(--accent)';
+          }else{
+            link.style.color='';
+          }
+        });
+      }
+    });
+  },{threshold:0.3,rootMargin:'-10% 0px -60% 0px'});
+  sections.forEach(function(s){observer.observe(s)});
+})();
+
+/* ===== SMOOTH ANCHOR SCROLL ===== */
+(function(){
+  document.querySelectorAll('a[href^="#"]').forEach(function(anchor){
+    anchor.addEventListener('click',function(e){
+      var target=document.querySelector(this.getAttribute('href'));
+      if(target){
+        e.preventDefault();
+        target.scrollIntoView({behavior:'smooth',block:'start'});
+      }
+    });
   });
 })();
 </script>
